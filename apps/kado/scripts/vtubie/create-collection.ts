@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'node:path'
-import { db } from 'src/handlers/db'
+import { db } from 'db'
 import { generateCIN } from 'src/utils/generate-cin'
 import { DirtLevel } from '@prisma/client'
 

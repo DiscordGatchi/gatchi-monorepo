@@ -3,24 +3,12 @@ import FormData from 'form-data'
 import { Command, ICommand } from 'src/lib/decorators/command.decorator'
 import { CustomClient } from 'src/lib/discord.js/custom.client'
 import mime from 'mime-types'
-import { CardOwnershipRef, DirtLevel } from 'db'
+import { DirtLevel } from 'db'
 import fetch from 'node-fetch'
 import { kebabCase } from 'lodash'
-import { sqltag } from '@prisma/client/runtime'
-
-const pretendCache = new Map<string | number, any>()
-
-const getOrPutInPretendCache = async <T>(
-  key: string | number,
-  fn: () => Promise<T>,
-) => {
-  const cached = pretendCache.get(key)
-  if (cached) return cached
-
-  const value = await fn()
-  pretendCache.set(key, value)
-  return value
-}
+import { API_URL } from 'src/constants'
+import { createCard } from 'src/handlers/db/helpers/create'
+import { generateCIN } from 'src/utils/generate-cin'
 
 @Command({
   name: 'roll',
@@ -33,55 +21,45 @@ export class RollCommand implements ICommand {
     const { db } = this.client
     await interaction.deferReply()
 
-    const cardOwnershipRefs = (await db.$queryRaw(
-      sqltag`SELECT "cardId" FROM "CardOwnershipRef" WHERE "CardOwnershipRef"."ownerId" is null ORDER BY RANDOM() LIMIT 1`,
-    )) satisfies Array<Pick<CardOwnershipRef, 'cardId'>>
+    const randomCardRefId = 7195 /*Math.floor(
+      Math.random() * (this.client.cardRefCount ?? 0),
+    )*/
 
-    const cardOwnershipRef = cardOwnershipRefs[0]
-
-    if (!cardOwnershipRef) {
-      throw new Error('No cards available')
-    }
-
-    const card = await db.card.findUnique({
-      where: {
-        id: cardOwnershipRef.cardId,
+    const cardRef = await db.cardRef.findUnique({
+      where: { id: randomCardRefId },
+      include: {
+        collection: {
+          select: {
+            name: true,
+          },
+        },
       },
     })
 
+    if (!cardRef) {
+      return interaction.editReply({
+        content: 'There was an internal error.',
+      })
+    }
+
+    const currentPrintNumber = Math.floor(
+      Math.random() * cardRef.totalPrintedCount,
+    )
+
+    const card = await createCard(cardRef.id, {
+      cin: generateCIN(cardRef.id + '-' + currentPrintNumber, false),
+      currentPrintNumber,
+      powerLevel: 1,
+      dirtLevel: DirtLevel.NORMAL,
+    })
+
     if (!card) {
-      return await interaction.editReply('No cards found')
-    }
-
-    const ref = await getOrPutInPretendCache(`ca-${card.refId}`, () =>
-      db.cardRef.findUnique({
-        where: {
-          id: card.refId,
-        },
-      }),
-    )
-
-    if (!ref) {
-      return await interaction.editReply('No card ref found')
-    }
-
-    const collection = await getOrPutInPretendCache(
-      `co-${ref.collectionId}`,
-      () =>
-        db.collection.findUnique({
-          where: {
-            id: ref.collectionId,
-          },
-        }),
-    )
-
-    if (!collection) {
-      return await interaction.editReply('No collection found')
+      return await interaction.editReply('There was an internal error.')
     }
 
     const form = new FormData()
 
-    const contentType = mime.contentType(ref.icon)
+    const contentType = mime.contentType(cardRef.icon)
 
     if (!contentType) {
       return await interaction.editReply('No content type found for image')
@@ -93,15 +71,17 @@ export class RollCommand implements ICommand {
         isSuperShiny: card.dirtLevel === DirtLevel.SHINY,
         isDirty: card.dirtLevel === DirtLevel.DIRTY,
         cin: card.cin,
-        name: ref.name,
-        icon: `${kebabCase(collection.name.toLowerCase())}/${ref.icon}`,
+        name: cardRef.name,
+        icon: `${kebabCase(cardRef.collection.name.toLowerCase())}/${
+          cardRef.icon
+        }`,
         powerLevel: card.powerLevel,
-        totalPrintedCount: ref.totalPrintedCount,
+        totalPrintedCount: cardRef.totalPrintedCount,
         currentPrintNumber: card.currentPrintNumber,
       }),
     )
 
-    const res = await fetch('https://api.kado.gg', {
+    const res = await fetch(API_URL, {
       method: 'POST',
       body: form,
     })

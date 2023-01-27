@@ -1,4 +1,4 @@
-import { db } from 'src/handlers/db'
+import { db } from 'db'
 import { sqltag } from '@prisma/client/runtime'
 
 db.$queryRaw(sqltag`DROP TABLE "Card" CASCADE`).catch(console.error)

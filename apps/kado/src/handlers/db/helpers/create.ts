@@ -1,4 +1,4 @@
-import { db, Card } from 'db'
+import { db, Card, CardRef } from 'db'
 import { User } from 'discord.js'
 
 export const createCollection = (name: string) =>
@@ -8,28 +8,37 @@ export const createCollection = (name: string) =>
     },
   })
 
-export const createCard = async (
-  collectionName: string,
-  card: Omit<Card, 'collectionId'>,
-) => {
+export const getOrCreateCollection = async (name: string) => {
   const collection = await db.collection.findFirst({
-    where: { name: collectionName },
-    select: {
-      id: true,
-    },
+    where: { name },
   })
 
-  if (!collection) {
-    throw new Error('Collection not found')
+  if (collection) {
+    return collection
   }
 
-  return db.card.create({
+  return createCollection(name)
+}
+
+export const createCard = async (
+  cardRefId: number,
+  card: Omit<Card, 'id' | 'refId'>,
+) =>
+  db.card.create({
     data: {
       ...card,
-      collectionId: collection.id,
+      ref: {
+        connect: {
+          id: cardRefId,
+        },
+      },
     },
   })
-}
+
+export const createAndStoreRandomCardInCollection = async (
+  collectionName: string,
+  user: User,
+) => {}
 
 export const createUser = (user: User) =>
   db.user.create({

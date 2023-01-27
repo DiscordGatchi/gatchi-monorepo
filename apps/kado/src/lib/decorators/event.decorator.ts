@@ -1,4 +1,3 @@
-import { client } from 'src/handlers/client'
 import { Maybe } from 'src/utils/types'
 import { CustomClient } from 'src/lib/discord.js/custom.client'
 import { ClientEvents } from 'discord.js'
