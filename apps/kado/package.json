@@ -1,0 +1,39 @@
+{
+  "name": "kado",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "ts": "dotenv -c -- tsx",
+    "ps": "dotenv -c -- prisma",
+    "dev": "yarn ts --watch src/index.ts",
+    "start": "yarn ts src/index.ts",
+    "deploy:commands": "yarn ts scripts/deploy.commands.ts"
+  },
+  "devDependencies": {
+    "@types/form-data": "^2.5.0",
+    "@types/lodash": "^4.14.191",
+    "@types/mime-types": "^2.1.1",
+    "@types/node-fetch": "2",
+    "cheerio": "^1.0.0-rc.12",
+    "discord-api-types": "^0.37.25",
+    "dotenv-cli": "^6.0.0",
+    "lodash": "^4.17.21",
+    "prettier": "^2.8.1",
+    "tsx": "^3.12.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@prisma/client": "^4.8.0",
+    "db": "*",
+    "discord.js": "^14.7.1",
+    "form-data": "^4.0.0",
+    "mime-types": "^2.1.35",
+    "node-fetch": "2",
+    "prisma": "^4.8.0",
+    "skia-canvas": "^1.0.1",
+    "tslog": "^4.7.1"
+  }
+}

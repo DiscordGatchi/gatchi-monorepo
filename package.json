@@ -12,6 +12,8 @@
   },
   "scripts": {
     "build": "turbo build",
+    "start:kado": "yarn workspace kado start",
+    "start:skia": "yarn workspace skia-api start",
     "start:anachi": "yarn workspace anachi start",
     "start": "yarn workspaces foreach -pi run start"
   },

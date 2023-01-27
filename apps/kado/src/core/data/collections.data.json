@@ -1,0 +1,57 @@
+{
+  "data-type": "collections",
+  "collections": [
+    {
+      "collection": "bug-fighters",
+      "image-code": "collections/bug-fighters/{{name}}",
+      "data": [
+        {
+          "name": "gilgamesh",
+          "description": "Gilgamesh the Consumer of Reality",
+          "prints": 8,
+          "shiny": 1,
+          "startingPower": 6,
+          "color": "#999f4f"
+        },
+        {
+          "name": "maurice",
+          "description": "maurice the lady bug",
+          "prints": 96,
+          "shiny": 1,
+          "startingPower": 6,
+          "color": "#aa312f"
+        },
+        {
+          "name": "james",
+          "description": "james the stick bug",
+          "prints": 512,
+          "color": "#ffa621"
+        },
+        {
+          "name": "martha",
+          "description": "martha the ant",
+          "prints": 1024,
+          "color": "#b5b1b1"
+        },
+        {
+          "name": "jimmy",
+          "description": "jimmy the beetle",
+          "prints": 1024,
+          "color": "#6c5d5a"
+        },
+        {
+          "name": "daniel",
+          "description": "daniel the dragonfly",
+          "prints": 1024,
+          "color": "#668dc2"
+        },
+        {
+          "name": "bob",
+          "description": "bob the butterfly",
+          "prints": 1024,
+          "color": "#f6be14"
+        }
+      ]
+    }
+  ]
+}

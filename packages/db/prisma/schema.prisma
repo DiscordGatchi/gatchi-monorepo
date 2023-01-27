@@ -7,6 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// EVERYTHING ANACHI
+
 enum ModServerAction {
   BAN
   UNBAN
@@ -184,4 +186,98 @@ enum TicketStatus {
   CLOSED
   DISMISSED
   INVALID
+}
+
+// EVERYTHING KADO
+
+
+model User {
+  did String @id @unique // snowflake
+
+  name String?
+
+  cards CardOwnershipRef[]
+
+  history CardHistory[]
+}
+
+enum DirtLevel {
+  SHINY
+  NORMAL
+  DIRTY
+}
+
+model Collection {
+  id Int @id @unique @default(autoincrement())
+
+  name String @unique
+
+  cards CardRef[]
+}
+
+model CardRef {
+  id Int @id @unique @default(autoincrement())
+
+  cards Card[]
+
+  name               String
+  description        String
+  icon               String
+  totalPrintedCount  Int
+
+  collectionId Int
+  collection   Collection @relation(fields: [collectionId], references: [id])
+}
+
+model Card {
+  id Int @id @unique @default(autoincrement())
+
+  cin String @unique
+
+  ownership   CardOwnershipRef?
+
+  refId Int
+  ref CardRef @relation(fields: [refId], references: [id])
+
+  history CardHistory[]
+
+  currentPrintNumber Int
+  powerLevel         Int
+  dirtLevel DirtLevel
+}
+
+model CardOwnershipRef {
+  cardId Int @id @unique
+  card Card @relation(fields: [cardId], references: [id])
+
+  ownerId String?
+  owner User? @relation(fields: [ownerId], references: [did])
+}
+
+enum CardAttainmentType {
+  ROLLED
+  TRADED
+  GIFTED
+}
+
+enum CardDepartureType {
+  TRADED
+  GIFTED
+  RELEASED
+}
+
+model CardHistory {
+  id Int @id @unique @default(autoincrement())
+
+  card   Card   @relation(fields: [cardId], references: [cin])
+  cardId String
+
+  owner   User   @relation(fields: [ownerId], references: [did])
+  ownerId String
+
+  attainedAt   DateTime
+  attainedType CardAttainmentType
+
+  departedAt   DateTime?
+  departedType CardDepartureType?
 }

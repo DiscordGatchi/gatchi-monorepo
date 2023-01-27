@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "canvasx",
+  "scripts": {
+    "build": "tsx esbuild.config.ts"
+  },
+  "packageManager": "yarn@3.3.1",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "esbuild": "^0.17.4",
+    "tsx": "^3.12.2"
+  }
+}
