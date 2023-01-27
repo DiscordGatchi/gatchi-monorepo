@@ -42,134 +42,134 @@ enum ModChannelType {
 }
 
 model GuildSettings {
-  id        String   @id @unique // SNOWFLAKE
+  id String @id // SNOWFLAKE
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Guild settings
-  modRoles       ModRole[]
-  modChannels   ModChannel[]
+  modRoles    ModRole[]
+  modChannels ModChannel[]
 
   roleAssigners RoleAssigner[]
 }
 
 model RoleAssigner {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  guildId String
-  guildSettings   GuildSettings @relation(fields: [guildId], references: [id])
+  guildId       String
+  guildSettings GuildSettings @relation(fields: [guildId], references: [id])
 
   channelId String
   messageId String
 }
 
 model ModRole {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type ModRoleType
+  type   ModRoleType
   roleId String // SNOWFLAKE
 
-  guildId String // SNOWFLAKE
+  guildId       String // SNOWFLAKE
   guildSettings GuildSettings @relation(fields: [guildId], references: [id])
 }
 
 model ModChannel {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  type ModChannelType
-  channelId        String  // SNOWFLAKE
+  type      ModChannelType
+  channelId String // SNOWFLAKE
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  guildId String // SNOWFLAKE
+  guildId       String // SNOWFLAKE
   guildSettings GuildSettings @relation(fields: [guildId], references: [id])
 }
 
 model GuildMemberRef {
-  id        String   @id @unique // SNOWFLAKE
+  id String @id // SNOWFLAKE
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  lastActiveAt DateTime? // for the last time a user was active
+  lastActiveAt        DateTime? // for the last time a user was active
   lastActiveMessageId String? // SNOWFLAKE
-  lastOffenseAt DateTime? // for the last time a user had an offense
+  lastOffenseAt       DateTime? // for the last time a user had an offense
 
-  name      String
+  name          String
   discriminator String
 
-  joinedGuildAt DateTime?
+  joinedGuildAt   DateTime?
   joinedDiscordAt DateTime?
 
-  previousInfo GuildMemberInfoHistory[]
+  previousInfo   GuildMemberInfoHistory[]
   offenseHistory GuildMemberOffenseHistory[] @relation("offender")
 
   // Moderator fields
   isModerator Boolean @default(false)
-  isTrialing Boolean @default(false)
+  isTrialing  Boolean @default(false)
 
   offensesGiven GuildMemberOffenseHistory[] @relation("moderator")
 
-  createdTickets Ticket[] @relation("creator")
+  createdTickets  Ticket[] @relation("creator")
   assignedTickets Ticket[] @relation("assignee")
 
   lastActionAt DateTime? // for the last time a moderator issued an action on another user
 }
 
 model GuildMemberInfoHistory {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   updatedAt DateTime @updatedAt
 
-  name      String
+  name          String
   discriminator String
 
-  memberRefId     String
-  memberRef       GuildMemberRef @relation(fields: [memberRefId], references: [id])
+  memberRefId String
+  memberRef   GuildMemberRef @relation(fields: [memberRefId], references: [id])
 }
 
 model GuildMemberOffenseHistory {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   updatedAt DateTime @updatedAt
 
-  action    ModServerAction
-  reason    String
+  action ModServerAction
+  reason String
 
-  forgiven  Boolean @default(false)
+  forgiven Boolean @default(false)
 
   moderatorId String
   moderator   GuildMemberRef @relation("moderator", fields: [moderatorId], references: [id])
 
-  memberRefId     String
-  memberRef       GuildMemberRef @relation("offender", fields: [memberRefId], references: [id])
+  memberRefId String
+  memberRef   GuildMemberRef @relation("offender", fields: [memberRefId], references: [id])
 }
 
 model Ticket {
-  id        Int    @unique @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type TicketType
+  type   TicketType
   status TicketStatus
 
-  title String
+  title   String
   content String
 
   creatorId String
-  creator GuildMemberRef @relation("creator", fields: [creatorId], references: [id])
+  creator   GuildMemberRef @relation("creator", fields: [creatorId], references: [id])
 
   assigneeId String?
-  assignee GuildMemberRef? @relation("assignee", fields: [assigneeId], references: [id])
+  assignee   GuildMemberRef? @relation("assignee", fields: [assigneeId], references: [id])
 }
 
 enum TicketType {
@@ -190,15 +190,14 @@ enum TicketStatus {
 
 // EVERYTHING KADO
 
-
 model User {
-  did String @id @unique // snowflake
+  did String @id // snowflake
 
   name String?
 
-  cards CardOwnershipRef[]
+  prints CardPrint[]
 
-  history CardHistory[]
+  printHistory PrintOwnerHistory[]
 }
 
 enum DirtLevel {
@@ -208,76 +207,84 @@ enum DirtLevel {
 }
 
 model Collection {
-  id Int @id @unique @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   name String @unique
 
-  cards CardRef[]
+  cards Card[]
 }
 
-model CardRef {
-  id Int @id @unique @default(autoincrement())
+model Card {
+  id Int @id @default(autoincrement())
 
-  cards Card[]
+  prints CardPrint[]
 
-  name               String
-  description        String
-  icon               String
-  totalPrintedCount  Int
+  name        String
+  description String
+  icon        String
+
+  issues CardIssue[]
+
+  // Must satisfy 0 <= float < 1, can be generated via Math.random()
+  // Used for print number generation (`shuffeYates(issuePrints, seed)`)
+  seed Float
 
   collectionId Int
   collection   Collection @relation(fields: [collectionId], references: [id])
 }
 
-model Card {
-  id Int @id @unique @default(autoincrement())
+model CardIssue {
+  id Int @id @default(autoincrement())
+
+  cardId Int
+  card   Card @relation(fields: [cardId], references: [id])
+
+  issueDate  DateTime @default(now())
+  printCount Int
+}
+
+model CardPrint {
+  // Between 1 and CardIssue.printCount (offset by previous issue's printCount)
+  printId Int
 
   cin String @unique
 
-  ownership   CardOwnershipRef?
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [did])
 
-  refId Int
-  ref CardRef @relation(fields: [refId], references: [id])
+  cardId Int
+  card   Card @relation(fields: [cardId], references: [id])
 
-  history CardHistory[]
+  ownerHistory PrintOwnerHistory[]
 
-  currentPrintNumber Int
-  powerLevel         Int
-  dirtLevel DirtLevel
+  powerLevel Int
+  dirtLevel  DirtLevel
 }
 
-model CardOwnershipRef {
-  cardId Int @id @unique
-  card Card @relation(fields: [cardId], references: [id])
-
-  ownerId String?
-  owner User? @relation(fields: [ownerId], references: [did])
-}
-
-enum CardAttainmentType {
+enum PrintAttainmentType {
   ROLLED
   TRADED
   GIFTED
 }
 
-enum CardDepartureType {
+enum PrintDepartureType {
   TRADED
   GIFTED
   RELEASED
 }
 
-model CardHistory {
-  id Int @id @unique @default(autoincrement())
+model PrintOwnerHistory {
+  id Int @id @default(autoincrement())
 
-  card   Card   @relation(fields: [cardId], references: [cin])
-  cardId String
+  print   CardPrint @relation(fields: [printId], references: [cin])
+  printId String
 
   owner   User   @relation(fields: [ownerId], references: [did])
   ownerId String
 
   attainedAt   DateTime
-  attainedType CardAttainmentType
+  attainedType PrintAttainmentType
 
   departedAt   DateTime?
-  departedType CardDepartureType?
+  departedType PrintDepartureType?
 }
