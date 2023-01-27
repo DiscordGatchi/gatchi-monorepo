@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ModServerAction {
+  BAN
+  UNBAN
+  KICK
+  TIMEOUT
+  UNTIMEOUT
+  MUTE
+  UNMUTE
+  DEAFEN
+  UNDEAFEN
+  DISCONNECT
+  WARNING
+  FORGIVE
+}
+
+enum ModRoleType {
+  TRIAL_MOD
+  MOD
+  ADMIN
+  OWNER
+}
+
+enum ModChannelType {
+  MOD_CHAT
+  MOD_ACTION_LOGS
+  PUBLIC_ACTION_LOGS
+  WELCOME_LOGS
+  LEAVE_LOGS
+  TICKET_LOGS
+  TICKET_REQUESTS
+}
+
+model GuildSettings {
+  id        String   @id @unique // SNOWFLAKE
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Guild settings
+  modRoles       ModRole[]
+  modChannels   ModChannel[]
+
+  roleAssigners RoleAssigner[]
+}
+
+model RoleAssigner {
+  id        Int     @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  guildId String
+  guildSettings   GuildSettings @relation(fields: [guildId], references: [id])
+
+  channelId String
+  messageId String
+}
+
+model ModRole {
+  id        Int     @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type ModRoleType
+  roleId String // SNOWFLAKE
+
+  guildId String // SNOWFLAKE
+  guildSettings GuildSettings @relation(fields: [guildId], references: [id])
+}
+
+model ModChannel {
+  id        Int     @id @default(autoincrement())
+
+  type ModChannelType
+  channelId        String  // SNOWFLAKE
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  guildId String // SNOWFLAKE
+  guildSettings GuildSettings @relation(fields: [guildId], references: [id])
+}
+
+model GuildMemberRef {
+  id        String   @id @unique // SNOWFLAKE
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lastActiveAt DateTime? // for the last time a user was active
+  lastActiveMessageId String? // SNOWFLAKE
+  lastOffenseAt DateTime? // for the last time a user had an offense
+
+  name      String
+  discriminator String
+
+  joinedGuildAt DateTime?
+  joinedDiscordAt DateTime?
+
+  previousInfo GuildMemberInfoHistory[]
+  offenseHistory GuildMemberOffenseHistory[] @relation("offender")
+
+  // Moderator fields
+  isModerator Boolean @default(false)
+  isTrialing Boolean @default(false)
+
+  offensesGiven GuildMemberOffenseHistory[] @relation("moderator")
+
+  createdTickets Ticket[] @relation("creator")
+  assignedTickets Ticket[] @relation("assignee")
+
+  lastActionAt DateTime? // for the last time a moderator issued an action on another user
+}
+
+model GuildMemberInfoHistory {
+  id        Int     @id @default(autoincrement())
+
+  updatedAt DateTime @updatedAt
+
+  name      String
+  discriminator String
+
+  memberRefId     String
+  memberRef       GuildMemberRef @relation(fields: [memberRefId], references: [id])
+}
+
+model GuildMemberOffenseHistory {
+  id        Int     @id @default(autoincrement())
+
+  updatedAt DateTime @updatedAt
+
+  action    ModServerAction
+  reason    String
+
+  forgiven  Boolean @default(false)
+
+  moderatorId String
+  moderator   GuildMemberRef @relation("moderator", fields: [moderatorId], references: [id])
+
+  memberRefId     String
+  memberRef       GuildMemberRef @relation("offender", fields: [memberRefId], references: [id])
+}
+
+model Ticket {
+  id        Int    @unique @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type TicketType
+  status TicketStatus
+
+  title String
+  content String
+
+  creatorId String
+  creator GuildMemberRef @relation("creator", fields: [creatorId], references: [id])
+
+  assigneeId String?
+  assignee GuildMemberRef? @relation("assignee", fields: [assigneeId], references: [id])
+}
+
+enum TicketType {
+  APPEAL
+  REPORT
+  SUGGESTION
+  FEEDBACK
+  OTHER
+}
+
+enum TicketStatus {
+  OPEN
+  CLAIMED
+  CLOSED
+  DISMISSED
+  INVALID
+}

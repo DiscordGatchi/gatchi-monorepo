@@ -4,3 +4,13 @@ node_modules/
 types/
 dist/
 yarn-*.log
+.turbo
+
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
