@@ -1,16 +1,13 @@
 import { Events } from 'discord.js'
-import { CustomClient } from 'src/lib/discord.js/custom.client'
-import { Event } from 'src/lib/decorators/event.decorator'
-import logger from 'src/utils/logs'
+import { Event, EventType } from 'bot'
 
-@Event({ name: Events.ClientReady, once: true })
-export class ClientReadyEvent {
-  constructor(readonly client: CustomClient) {}
+export class ClientReadyEvent extends Event(Events.ClientReady) {
+  type = EventType.SINGLE
 
   async execute() {
-    logger.info(`Loaded ${this.client.events.size} events.`)
-    logger.info(`Loaded ${this.client.commands.size} commands.`)
-    logger.info(
+    out.info(`Loaded ${this.client.events.size} events.`)
+    out.info(`Loaded ${this.client.commands.size} commands.`)
+    out.info(
       `Client for application ${
         this.client.user?.username ?? 'UNKNOWN_APP'
       } is ready.`,

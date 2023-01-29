@@ -4,24 +4,30 @@ import {
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
 } from 'discord.js'
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import { ModChannelType, ModRoleType } from 'db'
 
 const getChannelTypeFromSubCommand = (subCommand: string) => {
   switch (subCommand) {
-    case 'welcome':
-      return ModChannelType.WELCOME_LOGS
-    case 'leave':
-      return ModChannelType.LEAVE_LOGS
-    case 'mod-chat':
-      return ModChannelType.MOD_CHAT
+    case 'message-logs':
+      return ModChannelType.MESSAGE_LOGS
+    case 'server-changes':
+      return ModChannelType.SERVER_UPDATES_LOGS
+    case 'vc-changes':
+      return ModChannelType.VC_UPDATES_LOGS
+    case 'member-changes':
+      return ModChannelType.MEMBER_UPDATES_LOGS
+    case 'role-changes':
+      return ModChannelType.ROLE_CHANGES_LOGS
+    case 'greeting':
+      return ModChannelType.GREETING_LOGS
+    case 'join-leave-logs':
+      return ModChannelType.JOIN_LEAVE_LOGS
     case 'mod-logs':
       return ModChannelType.MOD_ACTION_LOGS
     case 'ticket-logs':
       return ModChannelType.TICKET_LOGS
-    case 'public-mod-logs':
-      return ModChannelType.PUBLIC_ACTION_LOGS
     case 'ticket-requests':
       return ModChannelType.TICKET_REQUESTS
     default:
@@ -67,8 +73,8 @@ export class SetupCommand extends Command {
       .setDescription('Setup channels.')
       .addSubcommand(
         new SlashCommandSubcommandBuilder()
-          .setName('welcome')
-          .setDescription('Setup the welcome channel for the server.')
+          .setName('message-logs')
+          .setDescription('Setup the message logs channel for the server.')
           .addChannelOption((option) =>
             option
               .setName('channel')
@@ -77,8 +83,10 @@ export class SetupCommand extends Command {
       )
       .addSubcommand(
         new SlashCommandSubcommandBuilder()
-          .setName('leave')
-          .setDescription('Setup the leave channel for the server.')
+          .setName('server-changes')
+          .setDescription(
+            'Setup the server changes logs channel for the server.',
+          )
           .addChannelOption((option) =>
             option
               .setName('channel')
@@ -87,8 +95,50 @@ export class SetupCommand extends Command {
       )
       .addSubcommand(
         new SlashCommandSubcommandBuilder()
-          .setName('mod-chat')
-          .setDescription('Setup the mod chat channel for the server.')
+          .setName('vc-changes')
+          .setDescription('Setup the vc changes logs channel for the server.')
+          .addChannelOption((option) =>
+            option
+              .setName('channel')
+              .setDescription('Passing nothing will unset the channel.'),
+          ),
+      )
+      .addSubcommand(
+        new SlashCommandSubcommandBuilder()
+          .setName('member-changes')
+          .setDescription(
+            'Setup the member changes logs channel for the server.',
+          )
+          .addChannelOption((option) =>
+            option
+              .setName('channel')
+              .setDescription('Passing nothing will unset the channel.'),
+          ),
+      )
+      .addSubcommand(
+        new SlashCommandSubcommandBuilder()
+          .setName('role-changes')
+          .setDescription('Setup the role changes logs channel for the server.')
+          .addChannelOption((option) =>
+            option
+              .setName('channel')
+              .setDescription('Passing nothing will unset the channel.'),
+          ),
+      )
+      .addSubcommand(
+        new SlashCommandSubcommandBuilder()
+          .setName('greeting')
+          .setDescription('Setup the greeting channel for the server.')
+          .addChannelOption((option) =>
+            option
+              .setName('channel')
+              .setDescription('Passing nothing will unset the channel.'),
+          ),
+      )
+      .addSubcommand(
+        new SlashCommandSubcommandBuilder()
+          .setName('join-leave-logs')
+          .setDescription('Setup the join/leave logs channel for the server.')
           .addChannelOption((option) =>
             option
               .setName('channel')
@@ -109,16 +159,6 @@ export class SetupCommand extends Command {
         new SlashCommandSubcommandBuilder()
           .setName('ticket-logs')
           .setDescription('Setup the ticket logs channel for the server.')
-          .addChannelOption((option) =>
-            option
-              .setName('channel')
-              .setDescription('Passing nothing will unset the channel.'),
-          ),
-      )
-      .addSubcommand(
-        new SlashCommandSubcommandBuilder()
-          .setName('public-mod-logs')
-          .setDescription('Setup the public mod logs channel for the server.')
           .addChannelOption((option) =>
             option
               .setName('channel')

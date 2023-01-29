@@ -1,10 +1,10 @@
-import { Card, CardAttainmentType, CardDepartureType, User } from 'db'
+import { CardPrint, PrintAttainmentType, PrintDepartureType, User } from 'db'
 import { User as DJSUser } from 'discord.js'
 import inventory from 'src/handlers/db/helpers/inventory'
 import history from 'src/handlers/db/helpers/history'
-import { resolveCard, resolveUser } from 'src/handlers/db/helpers/resolver'
+import { resolveCardPrint, resolveUser } from 'src/handlers/db/helpers/resolver'
 
-export type UnresolvedCard = Card | string
+export type UnresolvedCard = CardPrint | string
 export type UnresolvedUser = User | DJSUser | string
 
 export const trade = async (
@@ -12,7 +12,7 @@ export const trade = async (
   unresolvedSender: UnresolvedUser,
   unresolvedReceiver: UnresolvedUser,
 ) => {
-  const card = await resolveCard(unresolvedCard)
+  const card = await resolveCardPrint(unresolvedCard)
   const sender = await resolveUser(unresolvedSender)
   const receiver = await resolveUser(unresolvedReceiver)
 
@@ -28,8 +28,8 @@ export const trade = async (
   await inventory.removeCard(sender.did, card.cin)
   await inventory.addCard(receiver.did, card.cin)
 
-  await history.update(lastHistory.id, CardDepartureType.TRADED)
-  await history.create(card.cin, receiver.did, CardAttainmentType.TRADED)
+  await history.update(lastHistory.id, PrintDepartureType.TRADED)
+  await history.create(card.cin, receiver.did, PrintAttainmentType.TRADED)
 
   return true
 }

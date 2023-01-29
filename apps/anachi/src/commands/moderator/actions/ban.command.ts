@@ -1,8 +1,9 @@
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
 import { helpers } from 'db'
+import { logging } from 'src/lib/systems/logging.system'
 
 export class BanCommand extends Command {
   name = 'ban'
@@ -28,7 +29,7 @@ export class BanCommand extends Command {
     const { db } = this.client
     const { guild, member, options } = interaction
 
-    await interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply()
 
     const target = options.getUser('user', true)
     const reason = options.getString('reason') ?? 'No reason provided'
@@ -55,13 +56,13 @@ export class BanCommand extends Command {
     const offense = await db.guildMemberOffenseHistory.create({
       data: {
         action: ModServerAction.BAN,
-        memberRefId: dbUser.id,
-        moderatorId: dbModerator.id,
+        memberRefId: dbUser.userId,
+        moderatorId: dbModerator.userId,
         reason,
       },
     })
 
-    const embed = await this.client.logging.log(guild, offense)
+    const embed = await logging.log(guild, offense)
 
     await interaction.editReply({
       embeds: [embed],

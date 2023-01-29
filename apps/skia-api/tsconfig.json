@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.shared.json",
-  "include": ["src"],
+  "include": ["src", "assets"],
   "compilerOptions": {
     "outDir": "dist",
     "baseUrl": "."

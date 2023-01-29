@@ -1,11 +1,10 @@
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient } from 'bot'
 import { GatewayIntentBits } from 'discord.js'
 
 export const client = new CustomClient({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildBans,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildIntegrations,
     GatewayIntentBits.GuildWebhooks,
@@ -19,6 +18,7 @@ export const client = new CustomClient({
     GatewayIntentBits.DirectMessageReactions,
     GatewayIntentBits.DirectMessageTyping,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildScheduledEvents,
     GatewayIntentBits.AutoModerationConfiguration,
     GatewayIntentBits.AutoModerationExecution,

@@ -10,10 +10,24 @@ type GuildMemberInput = {
   }
 }
 
-export const tryGetOrCreateGuildMemberRef = (member: GuildMemberInput) =>
-  db.guildMemberRef.upsert({
+export const tryGetOrCreateUser = (userDiscordId: string) =>
+  db.user.upsert({
     where: {
-      id: member.id,
+      id: userDiscordId,
+    },
+    update: {},
+    create: {
+      id: userDiscordId,
+    },
+  })
+
+export const tryGetOrCreateGuildMemberRef = async (
+  member: GuildMemberInput,
+) => {
+  const user = await tryGetOrCreateUser(member.id)
+  return db.guildMemberRef.upsert({
+    where: {
+      userId: user.id,
     },
     update: {
       name: member.user.username,
@@ -22,10 +36,11 @@ export const tryGetOrCreateGuildMemberRef = (member: GuildMemberInput) =>
       joinedGuildAt: member.joinedAt,
     },
     create: {
-      id: member.id,
+      userId: user.id,
       name: member.user.username,
       discriminator: member.user.discriminator,
       joinedDiscordAt: member.user.createdAt,
       joinedGuildAt: member.joinedAt,
     },
   })
+}

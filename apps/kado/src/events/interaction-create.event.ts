@@ -1,12 +1,8 @@
 import { Events, Interaction } from 'discord.js'
-import { CustomClient } from 'src/lib/discord.js/custom.client'
-import { Event } from 'src/lib/decorators/event.decorator'
 import { client } from 'src/handlers/client'
+import { Event } from 'bot'
 
-@Event({ name: Events.InteractionCreate })
-export class InteractionCreateEvent {
-  constructor(readonly client: CustomClient) {}
-
+export class InteractionCreateEvent extends Event(Events.InteractionCreate) {
   async execute(interaction: Interaction) {
     if (!interaction.isChatInputCommand()) return
 

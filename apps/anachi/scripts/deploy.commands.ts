@@ -1,11 +1,11 @@
-import { getConfigValue } from 'src/utils/config'
+import { getConfigValue } from 'utils'
 import { client } from 'src/client'
-import { REST, Routes, SlashCommandBuilder } from 'discord.js'
+import { REST, Routes } from 'discord.js'
 
 const getPluralEnd = (count: number) => (count === 1 ? '' : 's')
 
 const rest = new REST({ version: '10' }).setToken(
-  getConfigValue('CLIENT_TOKEN', true),
+  getConfigValue('ANACHI_CLIENT_TOKEN', true),
 )
 
 ;(async () => {
@@ -23,7 +23,7 @@ const rest = new REST({ version: '10' }).setToken(
     )
 
     const data = (await rest.put(
-      Routes.applicationCommands(getConfigValue('CLIENT_ID', true)),
+      Routes.applicationCommands(getConfigValue('ANACHI_CLIENT_ID', true)),
       { body: commandDetails },
     )) as []
 

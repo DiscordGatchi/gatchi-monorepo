@@ -1,4 +1,4 @@
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient } from 'bot'
 import { APIEmbed, ChannelType } from 'discord-api-types/v10'
 import { helpers } from 'db'
 import { Guild } from 'discord.js'
@@ -7,6 +7,7 @@ import {
   ModChannelType,
   ModServerAction,
 } from '@prisma/client'
+import { client } from 'src/client'
 
 enum Colors {
   INFO = /* #71bef5 */ 0x71bef5,
@@ -40,7 +41,7 @@ export class LoggingSystem {
       .replace(/\b\w/g, (l) => l.toUpperCase())
   }
 
-  private async _log(guild: Guild, isPublic: boolean, embed: APIEmbed) {
+  private async _log(guild: Guild, embed: APIEmbed) {
     const modLogs = await helpers.settings.getGuildChannelByType(
       guild,
       ModChannelType.MOD_ACTION_LOGS,
@@ -48,17 +49,6 @@ export class LoggingSystem {
 
     if (modLogs && modLogs.type === ChannelType.GuildText) {
       await modLogs.send({ embeds: [embed] })
-    }
-
-    if (isPublic) {
-      const publicLogs = await helpers.settings.getGuildChannelByType(
-        guild,
-        ModChannelType.PUBLIC_ACTION_LOGS,
-      )
-
-      if (publicLogs && publicLogs.type === ChannelType.GuildText) {
-        await publicLogs.send({ embeds: [embed] })
-      }
     }
 
     return embed
@@ -112,15 +102,12 @@ export class LoggingSystem {
     ] as const
   }
 
-  log(
-    guild: Guild,
-    offense: GuildMemberOffenseHistory,
-    { isPublic = true, title = '' } = {},
-  ) {
+  log(guild: Guild, offense: GuildMemberOffenseHistory, { title = '' } = {}) {
     return this._log(
       guild,
-      isPublic,
       this.getEmbed(title, ...this.offenseToEmbedArgs(offense)),
     )
   }
 }
+
+export const logging = new LoggingSystem(client)

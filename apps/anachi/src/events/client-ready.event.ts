@@ -1,14 +1,13 @@
 import { Events } from 'discord.js'
-import logger from 'src/utils/logs'
-import { Event, EventType } from 'src/lib/class/Event'
+import { Event, EventType } from 'bot'
 
 export class ClientReadyEvent extends Event(Events.ClientReady) {
   type = EventType.SINGLE
 
   override async execute() {
-    logger.info(`Loaded ${this.client.events.size} events.`)
-    logger.info(`Loaded ${this.client.commands.size} commands.`)
-    logger.info(
+    out.info(`Loaded ${this.client.events.size} events.`)
+    out.info(`Loaded ${this.client.commands.size} commands.`)
+    out.info(
       `Client for application ${
         this.client.user?.username ?? 'UNKNOWN_APP'
       } is ready.`,

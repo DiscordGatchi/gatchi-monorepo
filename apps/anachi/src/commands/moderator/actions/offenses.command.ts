@@ -1,5 +1,5 @@
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import {
   BaseMessageOptions,
   ButtonStyle,
@@ -10,6 +10,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
+import { logging } from 'src/lib/systems/logging.system'
 
 const TAKE_AMOUNT = 4
 
@@ -172,10 +173,7 @@ export class OffensesCommand extends Command {
           totalOffenses === 1 ? '' : 's'
         } for: \`${types.join(',')}\``,
         embeds: warnings.map((warning) =>
-          this.client.logging.getEmbed(
-            undefined,
-            ...this.client.logging.offenseToEmbedArgs(warning),
-          ),
+          logging.getEmbed(undefined, ...logging.offenseToEmbedArgs(warning)),
         ),
         components: noButtons ? [] : getComponents(pageN),
       }

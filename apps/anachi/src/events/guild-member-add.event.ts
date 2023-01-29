@@ -1,16 +1,71 @@
 import { APIEmbedField, ChannelType, Events, GuildMember } from 'discord.js'
 import { helpers } from 'db'
 import { ModChannelType } from '@prisma/client'
-import { Event } from 'src/lib/class/Event'
-import { clearHoistedNickname, isHoisting } from 'src/utils/anti-hoist'
+import { Event } from 'bot'
+import {
+  clearHoistedNickname,
+  getDateAsDiscordTimestamp,
+  isHoisting,
+} from 'utils'
+import moment from 'moment'
 
 export class GuildMemberAddEvent extends Event(Events.GuildMemberAdd) {
   override async execute(member: GuildMember) {
-    const ref = await helpers.user.tryGetOrCreateGuildMemberRef(member)
+    const memberRef = await helpers.user.tryGetOrCreateGuildMemberRef(member)
     const welcomeLog = await helpers.settings.getGuildChannelByType(
       member.guild,
-      ModChannelType.WELCOME_LOGS,
+      ModChannelType.GREETING_LOGS,
     )
+
+    const joinLeaveLogs = await helpers.settings.getGuildChannelByType(
+      member.guild,
+      ModChannelType.JOIN_LEAVE_LOGS,
+    )
+
+    if (joinLeaveLogs && joinLeaveLogs.type === ChannelType.GuildText) {
+      const now = new Date()
+      const hasJoinedBefore = moment(memberRef.createdAt).isBefore(
+        now.setMinutes(now.getMinutes() - 1),
+      )
+        ? getDateAsDiscordTimestamp(memberRef.createdAt, true)
+        : 'No'
+
+      await joinLeaveLogs.send({
+        embeds: [
+          {
+            title: 'Member Joined',
+            color: member.displayColor,
+            author: {
+              name: member.user.tag,
+              icon_url: member.user.displayAvatarURL(),
+            },
+            fields: [
+              {
+                name: 'User ID',
+                value: member.user.id,
+                inline: true,
+              },
+              {
+                name: 'New Member Count',
+                value: member.guild.memberCount.toString(),
+                inline: true,
+              },
+              {
+                name: 'Account Created',
+                value: getDateAsDiscordTimestamp(member.user.createdAt, true),
+                inline: true,
+              },
+              {
+                name: 'Joined Previously',
+                value: member.user.bot ? 'N/A' : hasJoinedBefore,
+                inline: true,
+              },
+            ],
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      })
+    }
 
     const fields: APIEmbedField[] = []
 

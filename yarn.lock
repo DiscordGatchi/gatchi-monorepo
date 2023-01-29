@@ -1613,6 +1613,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/fs-extra@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "@types/fs-extra@npm:11.0.1"
+  dependencies:
+    "@types/jsonfile": "*"
+    "@types/node": "*"
+  checksum: 3e930346e5d84f419deb8ced1c582beef8cb20d0bd8a0eb145a37d75bab0572a1895f0e48a0d681d386b3a58b9a992b2d2acecc464bcaec2548f53ea00718651
+  languageName: node
+  linkType: hard
+
 "@types/glob@npm:^7.1.1":
   version: 7.2.0
   resolution: "@types/glob@npm:7.2.0"
@@ -1620,6 +1630,15 @@ __metadata:
     "@types/minimatch": "*"
     "@types/node": "*"
   checksum: 6ae717fedfdfdad25f3d5a568323926c64f52ef35897bcac8aca8e19bc50c0bd84630bbd063e5d52078b2137d8e7d3c26eabebd1a2f03ff350fff8a91e79fc19
+  languageName: node
+  linkType: hard
+
+"@types/jsonfile@npm:*":
+  version: 6.1.1
+  resolution: "@types/jsonfile@npm:6.1.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: 0f8fe0a9221a00e8413cffba723dfe16553868724b830237256fb0052ecd5cac96498189d1235a001cfa815f352008261c9ceb373f0aa58227f891e0c7a12c4d
   languageName: node
   linkType: hard
 
@@ -1786,11 +1805,12 @@ __metadata:
     "@types/lodash": ^4.14.191
     "@types/mime-types": ^2.1.1
     "@types/node-fetch": 2
+    bot: "*"
     cheerio: ^1.0.0-rc.12
     db: "*"
     discord-api-types: ^0.37.25
     discord.js: ^14.7.1
-    dotenv-cli: ^6.0.0
+    dotenv-cli: ^7.0.0
     form-data: ^4.0.0
     lodash: ^4.17.21
     mime-types: ^2.1.35
@@ -1800,6 +1820,7 @@ __metadata:
     tslog: ^4.7.1
     tsx: ^3.12.1
     typescript: ^4.9.4
+    utils: "*"
   languageName: unknown
   linkType: soft
 
@@ -1985,6 +2006,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bot@*, bot@workspace:packages/bot":
+  version: 0.0.0-use.local
+  resolution: "bot@workspace:packages/bot"
+  dependencies:
+    copyfiles: ^2.4.1
+    db: "*"
+    discord.js: ^14.7.1
+    esbuild: ^0.17.4
+    rimraf: ^4.1.2
+    tscpaths: ^0.0.9
+    typescript: ^4.9.4
+    utils: "*"
+  languageName: unknown
+  linkType: soft
+
 "bowser@npm:^2.11.0":
   version: 2.11.0
   resolution: "bowser@npm:2.11.0"
@@ -2127,6 +2163,7 @@ __metadata:
   resolution: "canvasx@workspace:packages/canvasx"
   dependencies:
     "@types/node": ^18.11.18
+    dotenv-cli: ^7.0.0
     esbuild: ^0.17.4
     tsx: ^3.12.2
   languageName: unknown
@@ -2426,6 +2463,7 @@ __metadata:
   dependencies:
     "@prisma/client": ^4.9.0
     copyfiles: ^2.4.1
+    dotenv-cli: ^7.0.0
     esbuild: ^0.17.4
     prisma: ^4.9.0
     rimraf: ^4.1.2
@@ -2622,6 +2660,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv-cli@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "dotenv-cli@npm:7.0.0"
+  dependencies:
+    cross-spawn: ^7.0.3
+    dotenv: ^16.0.0
+    dotenv-expand: ^10.0.0
+    minimist: ^1.2.6
+  bin:
+    dotenv: cli.js
+  checksum: de4ed19bc08cef509e6bee8bf26df0523e502556abbc732a86f8eee50fc3b3b0b3824803100e39f2d09ef1335b558b9e10d1ba51a4a2338c0ebbae6b5c520b19
+  languageName: node
+  linkType: hard
+
+"dotenv-expand@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv-expand@npm:10.0.0"
+  checksum: 2a38b470efe0abcb1ac8490421a55e1d764dc9440fd220942bce40965074f3fb00b585f4346020cb0f0f219966ee6b4ee5023458b3e2953fe5b3214de1b314ee
+  languageName: node
+  linkType: hard
+
 "dotenv-expand@npm:^8.0.1":
   version: 8.0.3
   resolution: "dotenv-expand@npm:8.0.3"
@@ -2629,7 +2688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.0, dotenv@npm:^16.0.3":
+"dotenv@npm:^16.0.0":
   version: 16.0.3
   resolution: "dotenv@npm:16.0.3"
   checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
@@ -3276,6 +3335,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-extra@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "fs-extra@npm:11.1.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: 5ca476103fa1f5ff4a9b3c4f331548f8a3c1881edaae323a4415d3153b5dc11dc6a981c8d1dd93eec8367ceee27b53f8bd27eecbbf66ffcdd04927510c171e7f
+  languageName: node
+  linkType: hard
+
 "fs-minipass@npm:^2.0.0, fs-minipass@npm:^2.1.0":
   version: 2.1.0
   resolution: "fs-minipass@npm:2.1.0"
@@ -3315,6 +3385,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gatchi-monorepo@workspace:."
   dependencies:
+    dotenv-cli: ^7.0.0
+    moment: ^2.29.4
     prettier: ^2.8.3
     turbo: ^1.7.0
     typescript: ^4.9.4
@@ -3442,7 +3514,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.6":
   version: 4.2.10
   resolution: "graceful-fs@npm:4.2.10"
   checksum: 3f109d70ae123951905d85032ebeae3c2a5a7a997430df00ea30df0e3a6c60cf6689b109654d6fdacd28810a053348c4d14642da1d075049e6be1ba5216218da
@@ -3822,13 +3894,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-tokens@npm:^3.0.0 || ^4.0.0":
-  version: 4.0.0
-  resolution: "js-tokens@npm:4.0.0"
-  checksum: 8a95213a5a77deb6cbe94d86340e8d9ace2b93bc367790b260101d2f36a2eaf4e4e22d9fa9cf459b38af3a32fb4190e638024cf82ec95ef708680e405ea7cc78
-  languageName: node
-  linkType: hard
-
 "json-schema-traverse@npm:^1.0.0":
   version: 1.0.0
   resolution: "json-schema-traverse@npm:1.0.0"
@@ -3845,6 +3910,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonfile@npm:^6.0.1":
+  version: 6.1.0
+  resolution: "jsonfile@npm:6.1.0"
+  dependencies:
+    graceful-fs: ^4.1.6
+    universalify: ^2.0.0
+  dependenciesMeta:
+    graceful-fs:
+      optional: true
+  checksum: 7af3b8e1ac8fe7f1eccc6263c6ca14e1966fcbc74b618d3c78a0a2075579487547b94f72b7a1114e844a1e15bb00d440e5d1720bfc4612d790a6f285d5ea8354
+  languageName: node
+  linkType: hard
+
 "kado@workspace:apps/kado":
   version: 0.0.0-use.local
   resolution: "kado@workspace:apps/kado"
@@ -3852,15 +3930,18 @@ __metadata:
     "@faker-js/faker": ^7.6.0
     "@prisma/client": ^4.8.0
     "@types/form-data": ^2.5.0
+    "@types/fs-extra": ^11.0.1
     "@types/lodash": ^4.14.191
     "@types/mime-types": ^2.1.1
     "@types/node-fetch": 2
+    bot: "*"
     cheerio: ^1.0.0-rc.12
     db: "*"
     discord-api-types: ^0.37.25
     discord.js: ^14.7.1
-    dotenv-cli: ^6.0.0
+    dotenv-cli: ^7.0.0
     form-data: ^4.0.0
+    fs-extra: ^11.1.0
     lodash: ^4.17.21
     mime-types: ^2.1.35
     node-fetch: 2
@@ -3870,6 +3951,7 @@ __metadata:
     tslog: ^4.7.1
     tsx: ^3.12.1
     typescript: ^4.9.4
+    utils: "*"
   languageName: unknown
   linkType: soft
 
@@ -3927,17 +4009,6 @@ __metadata:
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
-  languageName: node
-  linkType: hard
-
-"loose-envify@npm:^1.1.0":
-  version: 1.4.0
-  resolution: "loose-envify@npm:1.4.0"
-  dependencies:
-    js-tokens: ^3.0.0 || ^4.0.0
-  bin:
-    loose-envify: cli.js
-  checksum: 6517e24e0cad87ec9888f500c5b5947032cdfe6ef65e1c1936a0c48a524b81e65542c9c3edc91c97d5bddc806ee2a985dbc79be89215d613b1de5db6d1cfe6f4
   languageName: node
   linkType: hard
 
@@ -4184,6 +4255,13 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.29.4":
+  version: 2.29.4
+  resolution: "moment@npm:2.29.4"
+  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
   languageName: node
   linkType: hard
 
@@ -4691,15 +4769,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.2.0":
-  version: 18.2.0
-  resolution: "react@npm:18.2.0"
-  dependencies:
-    loose-envify: ^1.1.0
-  checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
-  languageName: node
-  linkType: hard
-
 "readable-stream@npm:^3.1.1, readable-stream@npm:^3.4.0, readable-stream@npm:^3.6.0":
   version: 3.6.0
   resolution: "readable-stream@npm:3.6.0"
@@ -5057,19 +5126,20 @@ __metadata:
     "@types/node-fetch": 2
     "@types/sharp": ^0.31.1
     "@vercel/og": ^0.0.21
+    bot: "*"
     cross-env: ^7.0.3
-    dotenv: ^16.0.3
+    db: "*"
     dotenv-cli: ^6.0.0
     esbuild: ^0.17.4
     fastify: ^4.10.2
     node-fetch: 2
     prettier: ^2.8.1
-    react: ^18.2.0
     sharp: ^0.31.3
     skia-canvas: ^1.0.1
     tsconfig-paths: ^4.1.1
-    tsx: ^3.12.2
+    tsx: ^3.12.1
     typescript: ^4.9.4
+    utils: "*"
   languageName: unknown
   linkType: soft
 
@@ -5679,6 +5749,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"universalify@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "universalify@npm:2.0.0"
+  checksum: 2406a4edf4a8830aa6813278bab1f953a8e40f2f63a37873ffa9a3bc8f9745d06cc8e88f3572cb899b7e509013f7f6fcc3e37e8a6d914167a5381d8440518c44
+  languageName: node
+  linkType: hard
+
 "unset-value@npm:^1.0.0":
   version: 1.0.0
   resolution: "unset-value@npm:1.0.0"
@@ -5725,6 +5802,18 @@ __metadata:
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
   languageName: node
   linkType: hard
+
+"utils@*, utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "utils@workspace:packages/utils"
+  dependencies:
+    copyfiles: ^2.4.1
+    esbuild: ^0.17.4
+    rimraf: ^4.1.2
+    tscpaths: ^0.0.9
+    typescript: ^4.9.4
+  languageName: unknown
+  linkType: soft
 
 "uuid@npm:^8.3.2":
   version: 8.3.2

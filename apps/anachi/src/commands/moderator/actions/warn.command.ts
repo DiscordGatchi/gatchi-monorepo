@@ -1,8 +1,10 @@
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions, promiseAsBoolean } from 'utils'
+import { Command } from 'bot'
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
 import { helpers } from 'db'
+import { logging } from 'src/lib/systems/logging.system'
+import { APIEmbed } from 'discord-api-types/v10'
 
 export class WarnCommand extends Command {
   name = 'warn'
@@ -19,8 +21,10 @@ export class WarnCommand extends Command {
       )
       .addBooleanOption((option) =>
         option
-          .setName('is-public')
-          .setDescription('Whether to warn silently or not (default is "TRUE")')
+          .setName('will-dm')
+          .setDescription(
+            "Whether to send the warning to the user or not (default is 'False')",
+          )
           .setRequired(false),
       )
       .addStringOption((option) =>
@@ -34,16 +38,16 @@ export class WarnCommand extends Command {
     const { db } = this.client
     const { guild, member, options } = interaction
 
-    await interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply()
 
     const targetUser = options.getUser('user', true)
-    const isPublic = options.getBoolean('is-public') ?? true
+    const willDm = options.getBoolean('will-dm') ?? false
     const reason = options.getString('reason') ?? 'No reason provided'
 
     if (targetUser.id === member.id) {
       return interaction.editReply({
         embeds: [
-          this.client.logging.getEmbed(
+          logging.getEmbed(
             'Smart Warning',
             ModServerAction.WARNING,
             member.id,
@@ -70,16 +74,35 @@ export class WarnCommand extends Command {
     const offense = await db.guildMemberOffenseHistory.create({
       data: {
         action: ModServerAction.WARNING,
-        memberRefId: dbUser.id,
-        moderatorId: dbModerator.id,
+        memberRefId: dbUser.userId,
+        moderatorId: dbModerator.userId,
         reason,
       },
     })
 
-    const embed = await this.client.logging.log(guild, offense, { isPublic })
+    const embed = await logging.log(guild, offense)
+
+    let dmSuccess = !willDm
+    if (willDm) {
+      dmSuccess = await promiseAsBoolean(
+        targetMember.send({
+          content: `You have been warned in ${guild!.name}:`,
+          embeds: [embed],
+        }),
+      )
+    }
+
+    const embeds = [embed] satisfies APIEmbed[]
+
+    if (!dmSuccess) {
+      embeds.push({
+        title: 'Failed to send embed to user.',
+        color: 0xff0000,
+      })
+    }
 
     await interaction.editReply({
-      embeds: [embed],
+      embeds,
     })
   }
 }

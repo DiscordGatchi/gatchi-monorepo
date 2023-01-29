@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "utils",
+  "version": "1.0.0",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn build:code:cjs && yarn build:code:esm && yarn build:types",
+    "build:dev": "yarn build:code:dev",
+    "clean": "rimraf dist",
+    "build:code:cjs": "yarn build:code --minify --format=cjs --outfile=dist/index.cjs.js",
+    "build:code:esm": "yarn build:code --minify --format=esm --outfile=dist/index.esm.js",
+    "build:code": "esbuild --bundle --sourcemap --platform=node --target=node16 src/index.ts",
+    "build:code:dev": "yarn build:code --outfile=dist/index.DEV-BUILD.js",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir types && tscpaths -p tsconfig.json -s src -o types",
+    "postinstall": "yarn build"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "esbuild": "^0.17.4",
+    "rimraf": "^4.1.2",
+    "tscpaths": "^0.0.9",
+    "typescript": "^4.9.4"
+  },
+  "packageManager": "yarn@3.3.1"
+}

@@ -11,10 +11,15 @@ import { WarnCommand } from 'src/commands/moderator/actions/warn.command'
 import { ForgiveCommand } from 'src/commands/moderator/actions/forgive.command'
 import { OffensesCommand } from 'src/commands/moderator/actions/offenses.command'
 
+import { UserUpdateEvent } from 'src/events/user-update.event'
 import { ClientReadyEvent } from 'src/events/client-ready.event'
-import { InteractionCreateEvent } from 'src/events/interaction-create.event'
+import { MessageDeleteEvent } from 'src/events/message-delete.event'
+import { MessageUpdateEvent } from 'src/events/message-update.event'
 import { GuildMemberAddEvent } from 'src/events/guild-member-add.event'
+import { InteractionCreateEvent } from 'src/events/interaction-create.event'
 import { GuildMemberUpdateEvent } from 'src/events/guild-member-update.event'
+import { GuildMemberRemoveEvent } from 'src/events/guild-member-remove.event'
+import { GuildAuditLogEntryCreateEvent } from 'src/events/guild-audit-log-entry-create.event'
 
 // Commands - General
 client.commands.register(PingCommand)
@@ -33,9 +38,14 @@ client.commands.register(TimeoutCommand)
 client.commands.register(UntimeoutCommand)
 
 // Events
+client.events.register(UserUpdateEvent)
 client.events.register(ClientReadyEvent)
+client.events.register(MessageUpdateEvent)
+client.events.register(MessageDeleteEvent)
 client.events.register(InteractionCreateEvent)
 client.events.register(GuildMemberAddEvent)
 client.events.register(GuildMemberUpdateEvent)
+client.events.register(GuildMemberRemoveEvent)
+client.events.register(GuildAuditLogEntryCreateEvent)
 
 export { client }

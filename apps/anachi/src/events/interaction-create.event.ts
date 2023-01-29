@@ -1,6 +1,6 @@
 import { Events, Interaction } from 'discord.js'
 import { client } from 'src/handlers/client'
-import { Event } from 'src/lib/class/Event'
+import { Event } from 'bot'
 
 export class InteractionCreateEvent extends Event(Events.InteractionCreate) {
   override async execute(interaction: Interaction) {

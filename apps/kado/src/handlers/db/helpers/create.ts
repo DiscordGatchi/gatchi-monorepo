@@ -1,4 +1,4 @@
-import { db, Card } from 'db'
+import { CardIssue, CardPrint, db, DirtLevel } from 'db'
 import { User } from 'discord.js'
 
 export const createCollection = (name: string) =>
@@ -8,32 +8,59 @@ export const createCollection = (name: string) =>
     },
   })
 
-export const createCard = async (
-  collectionName: string,
-  card: Omit<Card, 'collectionId'>,
-) => {
+export const getOrCreateCollection = async (name: string) => {
   const collection = await db.collection.findFirst({
-    where: { name: collectionName },
-    select: {
-      id: true,
-    },
+    where: { name },
   })
 
-  if (!collection) {
-    throw new Error('Collection not found')
+  if (collection) {
+    return collection
   }
 
-  return db.card.create({
+  return createCollection(name)
+}
+
+export const createCardIssue = ({
+  cardId,
+  printCount,
+}: Omit<CardIssue, 'id' | 'issueDate'>) =>
+  db.cardIssue.create({
     data: {
-      ...card,
-      collectionId: collection.id,
+      issueDate: new Date(),
+      printCount,
+      card: {
+        connect: {
+          id: cardId,
+        },
+      },
     },
   })
-}
+
+export const createCardPrint = ({
+  ownerId,
+  cardId,
+  ...details
+}: Omit<CardPrint, 'id' | 'dirtLevel'>) =>
+  db.cardPrint.create({
+    data: {
+      dirtLevel: DirtLevel.NORMAL,
+      ...details,
+      card: {
+        connect: {
+          id: cardId,
+        },
+      },
+      owner: {
+        connect: {
+          id: ownerId,
+        },
+      },
+    },
+  })
 
 export const createUser = (user: User) =>
   db.user.create({
     data: {
-      did: user.id,
+      id: user.id,
     },
   })
