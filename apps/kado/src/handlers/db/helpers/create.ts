@@ -52,7 +52,7 @@ export const createCardPrint = ({
       },
       owner: {
         connect: {
-          did: ownerId,
+          id: ownerId,
         },
       },
     },
@@ -61,6 +61,6 @@ export const createCardPrint = ({
 export const createUser = (user: User) =>
   db.user.create({
     data: {
-      did: user.id,
+      id: user.id,
     },
   })

@@ -70,7 +70,7 @@ export class TimeoutCommand extends Command {
     const { db } = this.client
     const { guild, member, options } = interaction
 
-    await interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply()
 
     const target = options.getUser('user', true)
     const duration = (options.getInteger('duration') ?? 5) * 60 * 1000
@@ -98,8 +98,8 @@ export class TimeoutCommand extends Command {
     const offense = await db.guildMemberOffenseHistory.create({
       data: {
         action: ModServerAction.TIMEOUT,
-        memberRefId: dbUser.id,
-        moderatorId: dbModerator.id,
+        memberRefId: dbUser.userId,
+        moderatorId: dbModerator.userId,
         reason,
       },
     })

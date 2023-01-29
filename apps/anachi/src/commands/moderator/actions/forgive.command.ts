@@ -28,7 +28,7 @@ export class ForgiveCommand extends Command {
     const { db } = this.client
     const { guild, member, options } = interaction
 
-    await interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply()
 
     const caseId = options.getNumber('case-id', true)
     const reason = options.getString('reason') ?? 'No reason provided'

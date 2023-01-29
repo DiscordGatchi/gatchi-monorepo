@@ -17,6 +17,7 @@ export const client = new CustomClient({
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.DirectMessageReactions,
     GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.GuildModeration,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildScheduledEvents,
     GatewayIntentBits.AutoModerationConfiguration,

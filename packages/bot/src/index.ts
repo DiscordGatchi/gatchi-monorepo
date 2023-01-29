@@ -1,6 +1,6 @@
 import { initLogger } from 'utils'
 
-initLogger('CustomClient')
+initLogger('package/bot')
 
 export * from 'src/lib/events'
 export * from 'src/lib/class/Event'

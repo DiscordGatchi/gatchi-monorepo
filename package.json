@@ -14,10 +14,15 @@
   "scripts": {
     "ts": "dotenv -e ../../.env -c --",
     "build": "turbo build",
+    "deploy:commands": "turbo deploy:commands",
     "start:kado": "yarn workspace kado start",
     "start:skia": "yarn workspace skia-api start",
     "start:anachi": "yarn workspace anachi start",
+    "dev:skia": "yarn workspace skia-api dev",
     "start": "yarn workspaces foreach -pi run start"
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.3.1",
+  "dependencies": {
+    "moment": "^2.29.4"
+  }
 }

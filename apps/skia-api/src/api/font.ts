@@ -6,7 +6,7 @@ const getFontPath = (name: string, type: string) =>
 FontLibrary.use('Rubik', [getFontPath('rubik', 'ttf')])
 
 if (!FontLibrary.has('Rubik')) {
-  console.error('Font "Rubik" was not found!')
+  out.error('Font "Rubik" was not found!')
 } else {
-  console.log('Font "Rubik" was found!')
+  out.info('Font "Rubik" was found!')
 }

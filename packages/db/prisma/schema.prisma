@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// GLOBAL
+
+model User {
+  id String @id // snowflake
+
+  prints CardPrint[]
+
+  printHistory PrintOwnerHistory[]
+
+  guildMemberRefs GuildMemberRef[]
+}
+
 // EVERYTHING ANACHI
 
 enum ModServerAction {
@@ -32,11 +44,14 @@ enum ModRoleType {
 }
 
 enum ModChannelType {
-  MOD_CHAT
+  MESSAGE_LOGS
+  SERVER_UPDATES_LOGS
+  VC_UPDATES_LOGS
+  MEMBER_UPDATES_LOGS
+  ROLE_CHANGES_LOGS
+  GREETING_LOGS
+  JOIN_LEAVE_LOGS
   MOD_ACTION_LOGS
-  PUBLIC_ACTION_LOGS
-  WELCOME_LOGS
-  LEAVE_LOGS
   TICKET_LOGS
   TICKET_REQUESTS
 }
@@ -94,7 +109,8 @@ model ModChannel {
 }
 
 model GuildMemberRef {
-  id String @id // SNOWFLAKE
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -133,7 +149,7 @@ model GuildMemberInfoHistory {
   discriminator String
 
   memberRefId String
-  memberRef   GuildMemberRef @relation(fields: [memberRefId], references: [id])
+  memberRef   GuildMemberRef @relation(fields: [memberRefId], references: [userId])
 }
 
 model GuildMemberOffenseHistory {
@@ -147,10 +163,10 @@ model GuildMemberOffenseHistory {
   forgiven Boolean @default(false)
 
   moderatorId String
-  moderator   GuildMemberRef @relation("moderator", fields: [moderatorId], references: [id])
+  moderator   GuildMemberRef @relation("moderator", fields: [moderatorId], references: [userId])
 
   memberRefId String
-  memberRef   GuildMemberRef @relation("offender", fields: [memberRefId], references: [id])
+  memberRef   GuildMemberRef @relation("offender", fields: [memberRefId], references: [userId])
 }
 
 model Ticket {
@@ -166,10 +182,10 @@ model Ticket {
   content String
 
   creatorId String
-  creator   GuildMemberRef @relation("creator", fields: [creatorId], references: [id])
+  creator   GuildMemberRef @relation("creator", fields: [creatorId], references: [userId])
 
   assigneeId String?
-  assignee   GuildMemberRef? @relation("assignee", fields: [assigneeId], references: [id])
+  assignee   GuildMemberRef? @relation("assignee", fields: [assigneeId], references: [userId])
 }
 
 enum TicketType {
@@ -189,16 +205,6 @@ enum TicketStatus {
 }
 
 // EVERYTHING KADO
-
-model User {
-  did String @id // snowflake
-
-  name String?
-
-  prints CardPrint[]
-
-  printHistory PrintOwnerHistory[]
-}
 
 enum DirtLevel {
   SHINY
@@ -244,13 +250,12 @@ model CardIssue {
 }
 
 model CardPrint {
-  // Between 1 and CardIssue.printCount (offset by previous issue's printCount)
   printId Int
 
   cin String @unique
 
   ownerId String
-  owner   User   @relation(fields: [ownerId], references: [did])
+  owner   User   @relation(fields: [ownerId], references: [id])
 
   cardId Int
   card   Card @relation(fields: [cardId], references: [id])
@@ -279,7 +284,7 @@ model PrintOwnerHistory {
   print   CardPrint @relation(fields: [printId], references: [cin])
   printId String
 
-  owner   User   @relation(fields: [ownerId], references: [did])
+  owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
 
   attainedAt   DateTime

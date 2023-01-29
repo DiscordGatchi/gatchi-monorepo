@@ -29,7 +29,7 @@ export class UnbanCommand extends Command {
     const { db } = this.client
     const { guild, member, options } = interaction
 
-    await interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply()
 
     const targetUserId = options.getString('user-id', true)
     const reason = options.getString('reason') ?? 'No reason provided'
@@ -43,21 +43,22 @@ export class UnbanCommand extends Command {
     await guild.members.unban(targetUserId, reason)
 
     const dbUser = await db.guildMemberRef.upsert({
-      where: { id: targetUserId },
+      where: { userId: targetUserId },
       update: {},
       create: {
-        id: targetUserId,
+        userId: targetUserId,
         name: 'unknown',
         discriminator: '0000',
       },
     })
+
     const dbModerator = await helpers.user.tryGetOrCreateGuildMemberRef(member)
 
     const offense = await db.guildMemberOffenseHistory.create({
       data: {
         action: ModServerAction.UNBAN,
-        memberRefId: dbUser?.id ?? 'unknown-user',
-        moderatorId: dbModerator.id,
+        memberRefId: dbUser.userId,
+        moderatorId: dbModerator.userId,
         reason,
       },
     })

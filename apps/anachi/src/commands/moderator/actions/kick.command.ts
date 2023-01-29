@@ -29,7 +29,7 @@ export class KickCommand extends Command {
     const { db } = this.client
     const { guild, member, options } = interaction
 
-    await interaction.deferReply({ ephemeral: true })
+    await interaction.deferReply()
 
     const target = options.getUser('user', true)
     const reason = options.getString('reason') ?? 'No reason provided'
@@ -56,8 +56,8 @@ export class KickCommand extends Command {
     const offense = await db.guildMemberOffenseHistory.create({
       data: {
         action: ModServerAction.KICK,
-        memberRefId: dbUser.id,
-        moderatorId: dbModerator.id,
+        memberRefId: dbUser.userId,
+        moderatorId: dbModerator.userId,
         reason,
       },
     })

@@ -1,6 +1,7 @@
-import { ClientEvents, Collection } from 'discord.js'
+import { Collection } from 'discord.js'
 import { CustomClient } from 'src/lib/custom.client'
 import { EventCls, IEvent } from 'src/lib/class/Event'
+import { ClientEvents } from 'src/lib/events'
 
 export class EventsRegister extends Collection<
   keyof ClientEvents,
@@ -12,6 +13,7 @@ export class EventsRegister extends Collection<
 
   public start() {
     this.forEach((event, name) =>
+      // @ts-expect-error
       this.client[event.type](name, event.execute.bind(event)),
     )
   }

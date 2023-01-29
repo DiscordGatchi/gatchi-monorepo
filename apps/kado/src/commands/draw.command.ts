@@ -8,22 +8,31 @@ import { createCardPrint } from 'src/handlers/db/helpers/create'
 import { generateSeededNumber } from 'utils'
 import { generateCIN } from 'utils'
 import { Command } from 'bot'
-import { CommandInteraction } from 'discord.js'
+import { ChatInputCommandInteraction } from 'discord.js'
+import { helpers } from 'db'
 
-export class RollCommand extends Command {
+export class DrawCommand extends Command {
   name = 'draw'
   description = 'Draw a new card!'
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { db } = this.client
     await interaction.deferReply()
 
-    const randomCardRefId = Math.floor(
-      Math.random() * (this.client.cardCount ?? 0),
+    const randomCardId = Math.floor(Math.random() * (await db.card.count()))
+
+    if (!interaction.member) {
+      return interaction.editReply({
+        content: 'There was an internal error.',
+      })
+    }
+
+    const user = await helpers.user.tryGetOrCreateGuildMemberRef(
+      interaction.member,
     )
 
     const card = await db.card.findUnique({
-      where: { id: randomCardRefId },
+      where: { id: randomCardId },
       include: {
         collection: {
           select: {
@@ -62,18 +71,24 @@ export class RollCommand extends Command {
       0,
     )
 
+    if (!latestIssue) {
+      return await interaction.editReply('There was an internal error.')
+    }
+
     const printId = generateSeededNumber(
       card.seed,
-      totalIssuePrints - latestIssue.printCount,
+      totalIssuePrints -
+        latestIssue.printCount +
+        (await db.cardPrint.count({ where: { cardId: card.id } })),
       latestIssue.printCount,
     )
 
     const cardPrint = await createCardPrint({
-      cin: generateCIN(`${card.id}-${printId}-${card.collectionId}`, false),
+      cin: generateCIN(`${card.id}-${card.collectionId}`, false),
       powerLevel: 1,
-      printId,
       cardId: card.id,
-      ownerId: interaction.user.id,
+      ownerId: user.userId,
+      printId,
     })
 
     if (!cardPrint) {
@@ -98,7 +113,7 @@ export class RollCommand extends Command {
         icon: `${kebabCase(card.collection.name.toLowerCase())}/${card.icon}`,
         powerLevel: cardPrint.powerLevel,
         totalPrintedCount: totalIssuePrints,
-        currentPrintNumber: cardPrint.printId,
+        currentPrintNumber: printId,
       }),
     )
 
@@ -112,6 +127,7 @@ export class RollCommand extends Command {
     await interaction.editReply({
       embeds: [
         {
+          title: `You pulled a ${card.name}!`,
           image: {
             url,
           },

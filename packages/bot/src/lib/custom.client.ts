@@ -9,8 +9,6 @@ export class CustomClient extends Client {
 
   public guild: Guild | null = null
 
-  public cardCount?: number
-
   public readonly events: EventsRegister
   public readonly commands: CommandsRegister
 
@@ -21,6 +19,7 @@ export class CustomClient extends Client {
     this.commands = new CommandsRegister(this)
 
     this.on(Events.Raw, (packet) => {
+      console.log('packet', packet.t)
       if (packet.t === 'GUILD_AUDIT_LOG_ENTRY_CREATE') {
         this.emit(Events.GuildAuditLogEntryCreate, packet.d)
       }

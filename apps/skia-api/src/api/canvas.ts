@@ -1,4 +1,3 @@
-import 'src/api/font'
 import { Canvas, CanvasRenderingContext2D, Image, loadImage } from 'skia-canvas'
 import { resolve } from 'node:path'
 import { getHexAsOpacity } from 'src/utils/opacity'
