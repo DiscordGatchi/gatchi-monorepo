@@ -1,4 +1,9 @@
-import { client } from 'src/client'
-import { getConfigValue } from 'src/utils/config'
+import { initLogger } from 'utils'
+initLogger('Anachi')
 
-client.start(getConfigValue<string>('CLIENT_TOKEN', true)).catch(console.error)
+import { client } from 'src/client'
+import { getConfigValue } from 'utils'
+
+client
+  .start(getConfigValue<string>('ANACHI_CLIENT_TOKEN', true))
+  .catch(console.error)

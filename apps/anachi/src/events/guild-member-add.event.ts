@@ -1,8 +1,8 @@
 import { APIEmbedField, ChannelType, Events, GuildMember } from 'discord.js'
 import { helpers } from 'db'
 import { ModChannelType } from '@prisma/client'
-import { Event } from 'src/lib/class/Event'
-import { clearHoistedNickname, isHoisting } from 'src/utils/anti-hoist'
+import { Event } from 'bot'
+import { clearHoistedNickname, isHoisting } from 'utils'
 
 export class GuildMemberAddEvent extends Event(Events.GuildMemberAdd) {
   override async execute(member: GuildMember) {

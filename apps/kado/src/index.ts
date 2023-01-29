@@ -1,18 +1,9 @@
-import { getConfigValue } from 'src/utils/config'
-import { client } from 'src/handlers/client'
+import { initLogger } from 'utils'
+initLogger('Kādo')
 
-import { RollCommand } from 'src/commands/roll.command'
-import { PingCommand } from 'src/commands/ping.command'
+import { client } from 'src/client'
+import { getConfigValue } from 'utils'
 
-import { ClientReadyEvent } from 'src/events/client-ready.event'
-import { InteractionCreateEvent } from 'src/events/interaction-create.event'
-
-client.commands.register(PingCommand)
-client.commands.register(RollCommand)
-
-client.events.register(ClientReadyEvent)
-client.events.register(InteractionCreateEvent)
-
-client.start(getConfigValue<string>('CLIENT_TOKEN', true)).catch(console.error)
-
-export { client }
+client
+  .start(getConfigValue<string>('KADO_CLIENT_TOKEN', true))
+  .catch(console.error)

@@ -1,4 +1,4 @@
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient } from 'bot'
 import { APIEmbed, ChannelType } from 'discord-api-types/v10'
 import { helpers } from 'db'
 import { Guild } from 'discord.js'
@@ -7,6 +7,7 @@ import {
   ModChannelType,
   ModServerAction,
 } from '@prisma/client'
+import { client } from 'src/client'
 
 enum Colors {
   INFO = /* #71bef5 */ 0x71bef5,
@@ -124,3 +125,5 @@ export class LoggingSystem {
     )
   }
 }
+
+export const logging = new LoggingSystem(client)

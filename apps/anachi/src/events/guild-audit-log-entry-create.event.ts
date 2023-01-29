@@ -1,8 +1,8 @@
-import { Event } from 'src/lib/class/Event'
 import {
+  Event,
   Events,
   GuildAuditLogEntryCreateRawData,
-} from 'src/lib/discord.js/events'
+} from 'bot'
 
 export class GuildAuditLogEntryCreateEvent extends Event(
   Events.GuildAuditLogEntryCreate,

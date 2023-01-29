@@ -4,8 +4,8 @@ import {
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
 } from 'discord.js'
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import { ModChannelType, ModRoleType } from 'db'
 
 const getChannelTypeFromSubCommand = (subCommand: string) => {

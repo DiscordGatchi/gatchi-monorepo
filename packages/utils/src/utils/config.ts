@@ -1,5 +1,7 @@
+import type { CustomProcessEnv } from 'src/index'
+
 export const getConfigValue = <V extends string | number | boolean = string>(
-  key: string,
+  key: keyof CustomProcessEnv,
   throwIfMissing = false,
 ) => {
   const value = process.env[key]
@@ -11,7 +13,10 @@ export const getConfigValue = <V extends string | number | boolean = string>(
   return value as V
 }
 
-export const getBooleanConfigValue = (key: string, throwIfMissing = false) => {
+export const getBooleanConfigValue = (
+  key: keyof CustomProcessEnv,
+  throwIfMissing = false,
+) => {
   const value = getConfigValue(key, throwIfMissing)
 
   if (value === 'true' || value === 'false') {
@@ -21,7 +26,10 @@ export const getBooleanConfigValue = (key: string, throwIfMissing = false) => {
   throw new Error(`Invalid boolean value for environment variable: ${key}`)
 }
 
-export const getNumberConfigValue = (key: string, throwIfMissing = false) => {
+export const getNumberConfigValue = (
+  key: keyof CustomProcessEnv,
+  throwIfMissing = false,
+) => {
   const value = getConfigValue(key, throwIfMissing)
 
   if (value !== null && !isNaN(Number(value))) {

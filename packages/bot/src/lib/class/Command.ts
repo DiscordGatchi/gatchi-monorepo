@@ -4,7 +4,7 @@ import {
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
 } from 'discord.js'
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient } from 'src/lib/custom.client'
 
 export interface ICommand {
   readonly name: string

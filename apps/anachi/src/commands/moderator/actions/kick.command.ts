@@ -1,8 +1,9 @@
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
 import { helpers } from 'db'
+import { logging } from 'src/lib/systems/logging.system'
 
 export class KickCommand extends Command {
   name = 'kick'
@@ -61,7 +62,7 @@ export class KickCommand extends Command {
       },
     })
 
-    const embed = await this.client.logging.log(guild, offense)
+    const embed = await logging.log(guild, offense)
 
     await interaction.editReply({
       embeds: [embed],

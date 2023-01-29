@@ -1,8 +1,9 @@
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
 import { helpers } from 'db'
+import { logging } from 'src/lib/systems/logging.system'
 
 export class WarnCommand extends Command {
   name = 'warn'
@@ -43,7 +44,7 @@ export class WarnCommand extends Command {
     if (targetUser.id === member.id) {
       return interaction.editReply({
         embeds: [
-          this.client.logging.getEmbed(
+          logging.getEmbed(
             'Smart Warning',
             ModServerAction.WARNING,
             member.id,
@@ -76,7 +77,7 @@ export class WarnCommand extends Command {
       },
     })
 
-    const embed = await this.client.logging.log(guild, offense, { isPublic })
+    const embed = await logging.log(guild, offense, { isPublic })
 
     await interaction.editReply({
       embeds: [embed],

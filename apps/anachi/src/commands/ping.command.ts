@@ -1,5 +1,5 @@
 import { CommandInteraction } from 'discord.js'
-import { Command } from 'src/lib/class/Command'
+import { Command } from 'bot'
 
 export class PingCommand extends Command {
   name = 'ping'

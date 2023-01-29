@@ -1,5 +1,5 @@
-import { CustomClient } from 'src/lib/discord.js/custom.client'
-import { ClientEvents } from 'src/lib/discord.js/events'
+import { CustomClient } from 'src/lib/custom.client'
+import { ClientEvents } from 'src/lib/events'
 
 export enum EventType {
   SINGLE = 'once',

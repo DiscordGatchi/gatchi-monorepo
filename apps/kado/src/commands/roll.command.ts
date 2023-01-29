@@ -1,31 +1,28 @@
-import { CommandInteraction } from 'discord.js'
 import FormData from 'form-data'
-import { Command, ICommand } from 'src/lib/decorators/command.decorator'
-import { CustomClient } from 'src/lib/discord.js/custom.client'
 import mime from 'mime-types'
 import { DirtLevel } from 'db'
 import fetch from 'node-fetch'
 import { kebabCase } from 'lodash'
 import { API_URL } from 'src/constants'
-import { createCard } from 'src/handlers/db/helpers/create'
-import { generateCIN } from 'src/utils/generate-cin'
+import { createCardPrint } from 'src/handlers/db/helpers/create'
+import { generateSeededNumber } from 'utils'
+import { generateCIN } from 'utils'
+import { Command } from 'bot'
+import { CommandInteraction } from 'discord.js'
 
-@Command({
-  name: 'roll',
-  description: 'joe',
-})
-export class RollCommand implements ICommand {
-  constructor(readonly client: CustomClient) {}
+export class RollCommand extends Command {
+  name = 'draw'
+  description = 'Draw a new card!'
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction) {
     const { db } = this.client
     await interaction.deferReply()
 
-    const randomCardRefId = 7195 /*Math.floor(
-      Math.random() * (this.client.cardRefCount ?? 0),
-    )*/
+    const randomCardRefId = Math.floor(
+      Math.random() * (this.client.cardCount ?? 0),
+    )
 
-    const cardRef = await db.cardRef.findUnique({
+    const card = await db.card.findUnique({
       where: { id: randomCardRefId },
       include: {
         collection: {
@@ -36,30 +33,56 @@ export class RollCommand implements ICommand {
       },
     })
 
-    if (!cardRef) {
+    if (!card) {
       return interaction.editReply({
         content: 'There was an internal error.',
       })
     }
 
-    const currentPrintNumber = Math.floor(
-      Math.random() * cardRef.totalPrintedCount,
-    )
-
-    const card = await createCard(cardRef.id, {
-      cin: generateCIN(cardRef.id + '-' + currentPrintNumber, false),
-      currentPrintNumber,
-      powerLevel: 1,
-      dirtLevel: DirtLevel.NORMAL,
+    const cardIssues = await db.cardIssue.findMany({
+      where: {
+        cardId: card.id,
+      },
+      orderBy: {
+        issueDate: 'desc',
+      },
     })
 
-    if (!card) {
+    if (!cardIssues) {
+      return await interaction.editReply('There was an internal error.')
+    }
+
+    const cardIssuesByDate = cardIssues.sort(
+      (a, b) => b.issueDate.getTime() - a.issueDate.getTime(),
+    )
+
+    const latestIssue = cardIssuesByDate[0]
+    const totalIssuePrints = cardIssuesByDate.reduce(
+      (acc, issue) => acc + issue.printCount,
+      0,
+    )
+
+    const printId = generateSeededNumber(
+      card.seed,
+      totalIssuePrints - latestIssue.printCount,
+      latestIssue.printCount,
+    )
+
+    const cardPrint = await createCardPrint({
+      cin: generateCIN(`${card.id}-${printId}-${card.collectionId}`, false),
+      powerLevel: 1,
+      printId,
+      cardId: card.id,
+      ownerId: interaction.user.id,
+    })
+
+    if (!cardPrint) {
       return await interaction.editReply('There was an internal error.')
     }
 
     const form = new FormData()
 
-    const contentType = mime.contentType(cardRef.icon)
+    const contentType = mime.contentType(card.icon)
 
     if (!contentType) {
       return await interaction.editReply('No content type found for image')
@@ -68,16 +91,14 @@ export class RollCommand implements ICommand {
     form.append(
       'details',
       JSON.stringify({
-        isSuperShiny: card.dirtLevel === DirtLevel.SHINY,
-        isDirty: card.dirtLevel === DirtLevel.DIRTY,
-        cin: card.cin,
-        name: cardRef.name,
-        icon: `${kebabCase(cardRef.collection.name.toLowerCase())}/${
-          cardRef.icon
-        }`,
-        powerLevel: card.powerLevel,
-        totalPrintedCount: cardRef.totalPrintedCount,
-        currentPrintNumber: card.currentPrintNumber,
+        isSuperShiny: cardPrint.dirtLevel === DirtLevel.SHINY,
+        isDirty: cardPrint.dirtLevel === DirtLevel.DIRTY,
+        cin: cardPrint.cin,
+        name: card.name,
+        icon: `${kebabCase(card.collection.name.toLowerCase())}/${card.icon}`,
+        powerLevel: cardPrint.powerLevel,
+        totalPrintedCount: totalIssuePrints,
+        currentPrintNumber: cardPrint.printId,
       }),
     )
 

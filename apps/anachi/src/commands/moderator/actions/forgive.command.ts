@@ -1,7 +1,8 @@
-import { createPermissions } from 'src/utils/discord-permissions'
-import { Command } from 'src/lib/class/Command'
+import { createPermissions } from 'utils'
+import { Command } from 'bot'
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
+import { logging } from 'src/lib/systems/logging.system'
 
 export class ForgiveCommand extends Command {
   name = 'forgive'
@@ -45,12 +46,13 @@ export class ForgiveCommand extends Command {
     if (dbCase.action === ModServerAction.FORGIVE) {
       return interaction.editReply({
         embeds: [
-          this.client.logging.getEmbed(
+          logging.getEmbed(
             '!!! BREAKING NEWS !!!',
             ModServerAction.FORGIVE,
             member.id,
             member.id,
             696969,
+            false,
             '***Colossal brain moderator tries to forgive a forgive case.***',
           ),
         ],
@@ -79,7 +81,7 @@ export class ForgiveCommand extends Command {
       },
     })
 
-    const embed = await this.client.logging.log(guild, offense, {
+    const embed = await logging.log(guild, offense, {
       title: `Case #${caseId} Forgiven`,
     })
 

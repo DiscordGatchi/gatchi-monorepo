@@ -1,6 +1,5 @@
-import logger from 'src/utils/logs'
 import { Collection } from 'discord.js'
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient } from 'src/lib/custom.client'
 import { CommandCls, ICommand } from 'src/lib/class/Command'
 
 export class CommandsRegister extends Collection<string, ICommand> {
@@ -34,6 +33,6 @@ export class CommandsRegister extends Collection<string, ICommand> {
 
     this.set(command.name, command)
 
-    logger.info(`Registered command ${command.name}`)
+    out.info(`Registered command ${command.name}`)
   }
 }

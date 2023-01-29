@@ -1,4 +1,4 @@
-import { db, Card, CardRef } from 'db'
+import { CardIssue, CardPrint, db, DirtLevel } from 'db'
 import { User } from 'discord.js'
 
 export const createCollection = (name: string) =>
@@ -20,25 +20,43 @@ export const getOrCreateCollection = async (name: string) => {
   return createCollection(name)
 }
 
-export const createCard = async (
-  cardRefId: number,
-  card: Omit<Card, 'id' | 'refId'>,
-) =>
-  db.card.create({
+export const createCardIssue = ({
+  cardId,
+  printCount,
+}: Omit<CardIssue, 'id' | 'issueDate'>) =>
+  db.cardIssue.create({
     data: {
-      ...card,
-      ref: {
+      issueDate: new Date(),
+      printCount,
+      card: {
         connect: {
-          id: cardRefId,
+          id: cardId,
         },
       },
     },
   })
 
-export const createAndStoreRandomCardInCollection = async (
-  collectionName: string,
-  user: User,
-) => {}
+export const createCardPrint = ({
+  ownerId,
+  cardId,
+  ...details
+}: Omit<CardPrint, 'id' | 'dirtLevel'>) =>
+  db.cardPrint.create({
+    data: {
+      dirtLevel: DirtLevel.NORMAL,
+      ...details,
+      card: {
+        connect: {
+          id: cardId,
+        },
+      },
+      owner: {
+        connect: {
+          did: ownerId,
+        },
+      },
+    },
+  })
 
 export const createUser = (user: User) =>
   db.user.create({

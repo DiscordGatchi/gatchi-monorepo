@@ -1,10 +1,12 @@
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient } from 'bot'
 import { db } from 'db'
 import { helpers } from 'db'
 import { GuildMember } from 'discord.js'
 import { ModServerAction } from '@prisma/client'
+import { client } from 'src/client'
+import { logging } from 'src/lib/systems/logging.system'
 
-export class WarningSystem {
+export class WarningsSystem {
   constructor(private readonly client: CustomClient) {}
 
   async warn(user: GuildMember, mod: GuildMember, reason: string) {
@@ -18,7 +20,7 @@ export class WarningSystem {
         reason,
       },
     })
-    await this.client.logging.log(user.guild, offense)
+    await logging.log(user.guild, offense)
   }
 
   forgive(historyId: number) {
@@ -64,3 +66,5 @@ export class WarningSystem {
     })
   }
 }
+
+export const warnings = new WarningsSystem(client)

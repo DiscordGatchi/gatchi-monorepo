@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "packageManager": "yarn@3.2.1",
   "scripts": {
-    "dev": "dotenv -c -- tsx watch src/index.ts",
-    "build": "tsx esbuild.config.ts",
+    "ts": "dotenv -e ../../.env -c -- tsx",
+    "dev": "yarn ts watch src/index.ts",
+    "build": "yarn ts esbuild.config.ts",
     "start": "node ."
   },
   "dependencies": {

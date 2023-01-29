@@ -1805,11 +1805,12 @@ __metadata:
     "@types/lodash": ^4.14.191
     "@types/mime-types": ^2.1.1
     "@types/node-fetch": 2
+    bot: "*"
     cheerio: ^1.0.0-rc.12
     db: "*"
     discord-api-types: ^0.37.25
     discord.js: ^14.7.1
-    dotenv-cli: ^6.0.0
+    dotenv-cli: ^7.0.0
     form-data: ^4.0.0
     lodash: ^4.17.21
     mime-types: ^2.1.35
@@ -1819,6 +1820,7 @@ __metadata:
     tslog: ^4.7.1
     tsx: ^3.12.1
     typescript: ^4.9.4
+    utils: "*"
   languageName: unknown
   linkType: soft
 
@@ -2004,6 +2006,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bot@*, bot@workspace:packages/bot":
+  version: 0.0.0-use.local
+  resolution: "bot@workspace:packages/bot"
+  dependencies:
+    copyfiles: ^2.4.1
+    db: "*"
+    discord.js: ^14.7.1
+    esbuild: ^0.17.4
+    rimraf: ^4.1.2
+    tscpaths: ^0.0.9
+    typescript: ^4.9.4
+    utils: "*"
+  languageName: unknown
+  linkType: soft
+
 "bowser@npm:^2.11.0":
   version: 2.11.0
   resolution: "bowser@npm:2.11.0"
@@ -2146,6 +2163,7 @@ __metadata:
   resolution: "canvasx@workspace:packages/canvasx"
   dependencies:
     "@types/node": ^18.11.18
+    dotenv-cli: ^7.0.0
     esbuild: ^0.17.4
     tsx: ^3.12.2
   languageName: unknown
@@ -2445,6 +2463,7 @@ __metadata:
   dependencies:
     "@prisma/client": ^4.9.0
     copyfiles: ^2.4.1
+    dotenv-cli: ^7.0.0
     esbuild: ^0.17.4
     prisma: ^4.9.0
     rimraf: ^4.1.2
@@ -2638,6 +2657,27 @@ __metadata:
   bin:
     dotenv: cli.js
   checksum: 3db5a363eedd24d428001a956d9b8c72094983bfe0e0e722cda7803b614daf85dde9c9beb5d9fa28a139a5c594533ecd8f9d8430a90c244175e81c9a40abc5b1
+  languageName: node
+  linkType: hard
+
+"dotenv-cli@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "dotenv-cli@npm:7.0.0"
+  dependencies:
+    cross-spawn: ^7.0.3
+    dotenv: ^16.0.0
+    dotenv-expand: ^10.0.0
+    minimist: ^1.2.6
+  bin:
+    dotenv: cli.js
+  checksum: de4ed19bc08cef509e6bee8bf26df0523e502556abbc732a86f8eee50fc3b3b0b3824803100e39f2d09ef1335b558b9e10d1ba51a4a2338c0ebbae6b5c520b19
+  languageName: node
+  linkType: hard
+
+"dotenv-expand@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv-expand@npm:10.0.0"
+  checksum: 2a38b470efe0abcb1ac8490421a55e1d764dc9440fd220942bce40965074f3fb00b585f4346020cb0f0f219966ee6b4ee5023458b3e2953fe5b3214de1b314ee
   languageName: node
   linkType: hard
 
@@ -3345,6 +3385,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "gatchi-monorepo@workspace:."
   dependencies:
+    dotenv-cli: ^7.0.0
     prettier: ^2.8.3
     turbo: ^1.7.0
     typescript: ^4.9.4
@@ -3899,11 +3940,12 @@ __metadata:
     "@types/lodash": ^4.14.191
     "@types/mime-types": ^2.1.1
     "@types/node-fetch": 2
+    bot: "*"
     cheerio: ^1.0.0-rc.12
     db: "*"
     discord-api-types: ^0.37.25
     discord.js: ^14.7.1
-    dotenv-cli: ^6.0.0
+    dotenv-cli: ^7.0.0
     form-data: ^4.0.0
     fs-extra: ^11.1.0
     lodash: ^4.17.21
@@ -3915,6 +3957,7 @@ __metadata:
     tslog: ^4.7.1
     tsx: ^3.12.1
     typescript: ^4.9.4
+    utils: "*"
   languageName: unknown
   linkType: soft
 
@@ -5777,6 +5820,18 @@ __metadata:
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
   languageName: node
   linkType: hard
+
+"utils@*, utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "utils@workspace:packages/utils"
+  dependencies:
+    copyfiles: ^2.4.1
+    esbuild: ^0.17.4
+    rimraf: ^4.1.2
+    tscpaths: ^0.0.9
+    typescript: ^4.9.4
+  languageName: unknown
+  linkType: soft
 
 "uuid@npm:^8.3.2":
   version: 8.3.2

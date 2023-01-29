@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "type-check": "tsc --noEmit",
-    "ts": "dotenv -c -- tsx",
-    "ps": "dotenv -c -- prisma",
+    "ts": "dotenv -e ../../.env -c -- tsx",
     "dev": "yarn ts watch src/index.ts",
     "start": "yarn ts src/index.ts",
     "deploy:commands": "yarn ts scripts/deploy.commands.ts"
@@ -18,7 +17,7 @@
     "@types/node-fetch": "2",
     "cheerio": "^1.0.0-rc.12",
     "discord-api-types": "^0.37.25",
-    "dotenv-cli": "^6.0.0",
+    "dotenv-cli": "^7.0.0",
     "lodash": "^4.17.21",
     "prettier": "^2.8.1",
     "tsx": "^3.12.1",
@@ -27,13 +26,15 @@
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@prisma/client": "^4.9.0",
+    "bot": "*",
     "db": "*",
     "discord.js": "^14.7.1",
     "form-data": "^4.0.0",
     "mime-types": "^2.1.35",
     "node-fetch": "2",
     "prisma": "^4.9.0",
-    "tslog": "^4.7.1"
+    "tslog": "^4.7.1",
+    "utils": "*"
   },
   "packageManager": "yarn@3.3.1"
 }

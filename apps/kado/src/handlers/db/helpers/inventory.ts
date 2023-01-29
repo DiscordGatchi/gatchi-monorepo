@@ -13,7 +13,9 @@ const updateCard = (
   db.user.update({
     where: { did },
     data: {
-      cards: { [type]: { cin } },
+      prints: {
+        [type]: { cin },
+      },
     },
   })
 

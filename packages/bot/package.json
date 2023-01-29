@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "db",
+  "name": "bot",
   "version": "1.0.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -11,25 +11,18 @@
   ],
   "license": "MIT",
   "scripts": {
-    "ps": "dotenv -e ../../.env -c -- prisma",
-    "build": "rimraf dist && yarn db:generate && yarn build:code:cjs && yarn build:code:esm && yarn build:types && yarn copy:schema-prisma",
-    "clean": "rimraf .turbo node_modules dist",
+    "build": "yarn build:code:cjs && yarn build:code:esm && yarn build:types",
+    "build:dev": "yarn build:code:dev",
+    "clean": "rimraf dist",
     "build:code:cjs": "yarn build:code --minify --format=cjs --outfile=dist/index.cjs.js",
     "build:code:esm": "yarn build:code --minify --format=esm --outfile=dist/index.esm.js",
-    "build:code": "esbuild --bundle \"--external:@prisma/client\" --sourcemap --platform=node --target=node16 src/index.ts",
+    "build:code": "esbuild --bundle \"--external:db\" \"--external:discord.js\" \"--external:utils\" \"--external:@prisma/client\" --sourcemap --platform=node --target=node16 src/index.ts",
     "build:code:dev": "yarn build:code --outfile=dist/index.DEV-BUILD.js",
-    "copy:schema-prisma": "copyfiles -f \"prisma/schema.prisma\" \"dist\"",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir types && tscpaths -p tsconfig.json -s src -o types",
-    "db:generate": "yarn ps generate",
-    "db:migrate": "yarn ps migrate dev --name",
-    "db:push": "yarn ps db push",
-    "db:pull": "yarn ps db pull",
-    "db:studio": "yarn ps studio",
     "postinstall": "yarn build"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "dotenv-cli": "^7.0.0",
     "esbuild": "^0.17.4",
     "rimraf": "^4.1.2",
     "tscpaths": "^0.0.9",
@@ -37,7 +30,8 @@
   },
   "packageManager": "yarn@3.3.1",
   "dependencies": {
-    "@prisma/client": "^4.9.0",
-    "prisma": "^4.9.0"
+    "db": "*",
+    "discord.js": "^14.7.1",
+    "utils": "*"
   }
 }

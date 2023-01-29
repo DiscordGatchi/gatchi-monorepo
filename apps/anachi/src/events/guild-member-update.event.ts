@@ -1,7 +1,7 @@
 import { Events, GuildMember } from 'discord.js'
-import { Event } from 'src/lib/class/Event'
-import { clearHoistedNickname, isHoisting } from 'src/utils/anti-hoist'
-import { CustomClient } from 'src/lib/discord.js/custom.client'
+import { CustomClient, Event } from 'bot'
+import { clearHoistedNickname, isHoisting } from 'utils'
+import { warnings } from 'src/lib/systems/warnings.system'
 
 const handleNicknameChange = async (
   client: CustomClient,
@@ -15,7 +15,7 @@ const handleNicknameChange = async (
   ) {
     await newMember.setNickname(clearHoistedNickname(newMember.nickname))
     const selfMember = newMember.guild.members.me!
-    await client.warnings.warn(
+    await warnings.warn(
       newMember,
       selfMember,
       'User attempted to hoist their nickname',

@@ -1,24 +1,24 @@
-import { db, CardAttainmentType, CardDepartureType } from 'db'
+import { db, PrintAttainmentType, PrintDepartureType } from 'db'
 
-const get = (cin: string, ownerId: string) =>
-  db.cardHistory.findFirst({ where: { ownerId, cardId: cin } })
+const get = (printId: string, ownerId: string) =>
+  db.printOwnerHistory.findFirst({ where: { ownerId, printId } })
 
 const create = (
-  cin: string,
+  printId: string,
   ownerId: string,
-  attainmentType: CardAttainmentType,
+  attainmentType: PrintAttainmentType,
 ) =>
-  db.cardHistory.create({
+  db.printOwnerHistory.create({
     data: {
-      cardId: cin,
+      printId,
       ownerId,
       attainedAt: new Date(),
       attainedType: attainmentType,
     },
   })
 
-const update = (id: number, departureType: CardDepartureType) =>
-  db.cardHistory.update({
+const update = (id: number, departureType: PrintDepartureType) =>
+  db.printOwnerHistory.update({
     where: {
       id,
     },
