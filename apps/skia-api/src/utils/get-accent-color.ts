@@ -101,7 +101,24 @@ export const getAccentColor = (
 
   const result = sortedColors[0]?.[0]
 
-  return result ? result : fallbackColor
+  if (result) {
+    return result
+  }
+
+  if (
+    options.minLuminance <= 0 &&
+    options.minBrightness <= 0 &&
+    options.minSaturation <= 0
+  ) {
+    return fallbackColor
+  }
+
+  return getAccentColor(ctx, fallbackColor, {
+    ...options,
+    minLuminance: options.minLuminance - 0.1,
+    minBrightness: options.minBrightness - 0.1,
+    minSaturation: options.minSaturation - 0.1,
+  })
 }
 
 const getSaturation = (color: string) => {

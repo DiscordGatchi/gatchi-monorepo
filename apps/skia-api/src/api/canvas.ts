@@ -46,7 +46,7 @@ export const createCard = async (details: CardDetails) => {
   ctx.clip()
   ctx.drawImage(img, 0, 0, width, height)
 
-  const colorAsHex = getAccentColor(ctx)
+  const colorAsHex = getAccentColor(ctx, DEFAULT_BG_COLOR)
 
   drawBox({
     bg: colorAsHex,
