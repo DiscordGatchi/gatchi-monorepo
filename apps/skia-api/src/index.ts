@@ -1,4 +1,5 @@
 import 'src/logging'
+import 'src/api/font'
 
 import { server } from 'src/server'
 import { getNumberConfigValue } from 'utils'

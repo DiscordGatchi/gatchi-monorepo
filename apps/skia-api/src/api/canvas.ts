@@ -1,13 +1,11 @@
-import { Canvas, CanvasRenderingContext2D, Image, loadImage } from 'skia-canvas'
-import { resolve } from 'node:path'
+import { Canvas, Image, loadImage } from 'skia-canvas'
 import { getHexAsOpacity } from 'src/utils/opacity'
-import { ASSETS_PATH } from 'src/constants'
 import { getAccentColor } from 'src/utils/get-accent-color'
 import sharp from 'sharp'
 import { CardDetails } from 'src/lib/types'
 import fetch from 'node-fetch'
-
-const getAssetImage = (name: string) => resolve(ASSETS_PATH, `${name}.png`)
+import { boxCreator, textCreator } from 'src/utils/canvas'
+import { getAssetImage } from 'src/utils/assets'
 
 const CARD_PADDING = 8
 const DEFAULT_BG_COLOR = '#363267'
@@ -23,71 +21,6 @@ const SUPER_POWER_LEVEL_COLOR = '#FF8329'
 
 const MAIN_TEXT_PADDING_BOTTOM = 72
 const MAIN_TEXT_FADED_PADDING_BOTTOM = 83
-
-type BaseStyles = {
-  x?: number
-  y?: number
-  opacity?: number
-  shadow?: {
-    color: string
-    blur: number
-    opacity?: number
-  }
-}
-
-type BoxStyles = BaseStyles & {
-  bg: string | CanvasGradient
-  width: number
-  height: number
-  radius?: [number, number, number, number]
-}
-
-type FontStyles = BaseStyles & {
-  size: number
-  color: string
-  family: string
-  weight?: number
-  align?: CanvasTextAlign
-  baseline?: CanvasTextBaseline
-  tracking?: number
-}
-
-const textCreator =
-  (ctx: CanvasRenderingContext2D) => (text: string, styles: FontStyles) => {
-    ctx.font = `${styles.weight ?? 400} ${styles.size}px '${styles.family}'`
-    ctx.fillStyle = getHexAsOpacity(styles.color, styles.opacity ?? 1)
-    ctx.textAlign = styles.align ?? 'left'
-    ctx.textBaseline = styles.baseline ?? 'alphabetic'
-    ctx.textTracking = styles.tracking ?? 0
-    if (styles.shadow) {
-      ctx.shadowColor = getHexAsOpacity(
-        styles.shadow.color,
-        styles.shadow.opacity ?? 1,
-      )
-      ctx.shadowBlur = styles.shadow.blur
-    }
-    ctx.fillText(text, styles.x ?? 0, styles.y ?? 0)
-  }
-
-const boxCreator = (ctx: CanvasRenderingContext2D) => (styles: BoxStyles) => {
-  ctx.beginPath()
-  ctx.fillStyle =
-    typeof styles.bg === 'string'
-      ? getHexAsOpacity(styles.bg, styles.opacity ?? 1)
-      : styles.bg
-  if (styles.radius) {
-    ctx.roundRect(
-      styles.x ?? 0,
-      styles.y ?? 0,
-      styles.width,
-      styles.height,
-      styles.radius,
-    )
-  } else {
-    ctx.rect(styles.x ?? 0, styles.y ?? 0, styles.width, styles.height)
-  }
-  ctx.fill()
-}
 
 const imageFromUrl = (url: string) => fetch(url).then((res) => res.buffer())
 

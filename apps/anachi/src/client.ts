@@ -10,6 +10,9 @@ import { UntimeoutCommand } from 'src/commands/moderator/actions/untimeout.comma
 import { WarnCommand } from 'src/commands/moderator/actions/warn.command'
 import { ForgiveCommand } from 'src/commands/moderator/actions/forgive.command'
 import { OffensesCommand } from 'src/commands/moderator/actions/offenses.command'
+import { ForceWelcomeCommand } from 'anachi/src/commands/admin/force-welcome.command'
+import { StatChannelCommand } from 'src/commands/admin/stat-channel.command'
+import { StealCommand } from 'src/commands/admin/steal.command'
 
 import { UserUpdateEvent } from 'src/events/user-update.event'
 import { ClientReadyEvent } from 'src/events/client-ready.event'
@@ -26,6 +29,9 @@ client.commands.register(PingCommand)
 
 // Commands - Admin
 client.commands.register(SetupCommand)
+client.commands.register(StealCommand)
+client.commands.register(ForceWelcomeCommand)
+client.commands.register(StatChannelCommand)
 
 // Commands - Moderator Actions
 client.commands.register(BanCommand)

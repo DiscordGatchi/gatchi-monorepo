@@ -44,6 +44,7 @@ enum ModRoleType {
 }
 
 enum ModChannelType {
+  STARBOARD
   MESSAGE_LOGS
   SERVER_UPDATES_LOGS
   VC_UPDATES_LOGS
@@ -54,6 +55,10 @@ enum ModChannelType {
   MOD_ACTION_LOGS
   TICKET_LOGS
   TICKET_REQUESTS
+}
+
+enum SupportedStat {
+  MEMBER_COUNT
 }
 
 model GuildSettings {
@@ -67,6 +72,37 @@ model GuildSettings {
   modChannels ModChannel[]
 
   roleAssigners RoleAssigner[]
+
+  statChannels StatChannel[]
+
+  starboardMessages StarboardMessage[]
+}
+
+model StatChannel {
+  channelId String @id // SNOWFLAKE
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  stat SupportedStat
+
+  guildId       String // SNOWFLAKE
+  guildSettings GuildSettings @relation(fields: [guildId], references: [id])
+}
+
+model StarboardMessage {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stars Int
+
+  messageId String // SNOWFLAKE
+
+  guildId       String // SNOWFLAKE
+  guildSettings GuildSettings @relation(fields: [guildId], references: [id])
 }
 
 model RoleAssigner {

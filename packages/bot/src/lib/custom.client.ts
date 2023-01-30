@@ -19,7 +19,6 @@ export class CustomClient extends Client {
     this.commands = new CommandsRegister(this)
 
     this.on(Events.Raw, (packet) => {
-      console.log('packet', packet.t)
       if (packet.t === 'GUILD_AUDIT_LOG_ENTRY_CREATE') {
         this.emit(Events.GuildAuditLogEntryCreate, packet.d)
       }
