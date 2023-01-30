@@ -3,9 +3,8 @@ import mime from 'mime-types'
 import { DirtLevel } from 'db'
 import fetch from 'node-fetch'
 import { kebabCase } from 'lodash'
-import { API_URL } from 'src/constants'
 import { createCardPrint } from 'src/handlers/db/helpers/create'
-import { generateSeededNumber } from 'utils'
+import { generateSeededNumber, getConfigValue } from 'utils'
 import { generateCIN } from 'utils'
 import { Command } from 'bot'
 import { ChatInputCommandInteraction } from 'discord.js'
@@ -117,7 +116,7 @@ export class DrawCommand extends Command {
       }),
     )
 
-    const res = await fetch(API_URL, {
+    const res = await fetch(getConfigValue<string>('API_URL', true) + '/card', {
       method: 'POST',
       body: form,
     })

@@ -3,6 +3,8 @@ export interface CustomProcessEnv {
 
   DATABASE_URL: string
 
+  API_URL: string
+
   PORT: string | undefined
   AWS_REGION: string
   AWS_ENDPOINT: string

@@ -3,6 +3,7 @@ import { db, helpers, ModChannelType, SupportedStat } from 'db'
 import { Event } from 'bot'
 import {
   clearHoistedNickname,
+  getConfigValue,
   getDateAsDiscordTimestamp,
   isHoisting,
 } from 'utils'
@@ -22,20 +23,23 @@ export class GuildMemberAddEvent extends Event(Events.GuildMemberAdd) {
       ModChannelType.JOIN_LEAVE_LOGS,
     )
 
-    const res = await fetch('http://localhost:8080/welcome', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        avatarUrl: member.user.displayAvatarURL({
-          size: 128,
-          extension: 'png',
+    const res = await fetch(
+      getConfigValue<string>('API_URL', true) + '/welcome',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          avatarUrl: member.user.displayAvatarURL({
+            size: 128,
+            extension: 'png',
+          }),
+          username: member.user.username,
+          discriminator: member.user.discriminator,
         }),
-        username: member.user.username,
-        discriminator: member.user.discriminator,
-      }),
-    })
+      },
+    )
 
     const welcomeImage = await res.buffer() // image/png
 
