@@ -10,8 +10,8 @@ out.info(`Starting server on port ${port}...`)
 
 server.listen(
   {
-    host: '0.0.0.0',
     port,
+    host: '0.0.0.0',
   },
   (err, address) => {
     if (err) {

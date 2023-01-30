@@ -12,4 +12,8 @@ server.register(FastifyMultipartHandler, {
 server.post('/card', cardHandler)
 server.post('/welcome', welcomeHandler)
 
+server.get('/', async (request, reply) => {
+  reply.status(200).send('OK!')
+})
+
 export { server }
