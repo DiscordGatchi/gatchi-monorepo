@@ -10,6 +10,14 @@ export class InteractionCreateEvent extends Event(Events.InteractionCreate) {
 
     if (!command) return
 
-    await command.execute(interaction)
+    try {
+      await command.execute(interaction)
+    } catch (err) {
+      out.error('Command Error', err)
+      await interaction.reply({
+        ephemeral: true,
+        content: 'There was an error while executing this command!',
+      })
+    }
   }
 }
