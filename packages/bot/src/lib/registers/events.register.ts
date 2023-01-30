@@ -14,7 +14,9 @@ export class EventsRegister extends Collection<
   public start() {
     this.forEach((event, name) =>
       // @ts-expect-error
-      this.client[event.type](name, event.execute.bind(event)),
+      this.client[event.type](name, (...args) =>
+        event.execute(...args).catch(out.error),
+      ),
     )
   }
 
